@@ -200,6 +200,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
 var person;
 var maze = undefined;
 var difficulty;
+var score;
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -240,11 +241,22 @@ const WelcomeIntentHandler = {
         var person = request.intent.slots.name.value;
 
         const speakOutput = `Hola ${person}, selecciona la dificultad de tu calabozo: ¿1, 2, 3 o 4?`;
-
+        
+        const main = require('./templates/welcome.json');
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
+            .addDirective({
+               type : 'Alexa.Presentation.APL.RenderDocument',
+               version: '1.0',
+               document: main,
+               datasources: {
+                  "docdata": {
+                     "person": person
+                 }
+                }
+            })
             .getResponse();
 
     }
@@ -318,7 +330,7 @@ const AnswerIntentHandler = {
         const request = handlerInput.requestEnvelope.request;
         
         var direction = request.intent.slots.answer.value;
-        
+        var main;
         var speakOutput;
         if(maze == undefined){
             speakOutput = "Elige una dificultad antes de decir alguna dirección."
@@ -359,9 +371,12 @@ const AnswerIntentHandler = {
                     break;
             }
             if(flag){
+                maze["count"] = maze["count"]+1;
                 speakOutput = `Hemos avanzado en dirección ${direction},`;
+                main = require('./templates/caminando.json');
             } else {
                 speakOutput = "Topamos contra una pared, hay que elegir otra opcion,";
+                main = require('./templates/muro.json');
             }
             speakOutput = speakOutput.concat(" ¿Cuál será el siguiente paso?");
             if (maze["location"][0] > 0){
@@ -386,14 +401,25 @@ const AnswerIntentHandler = {
             }
             if(maze["Maze"][maze["location"][0]][maze["location"][1]] == 3){
                 speakOutput = "Lo logramos! hemos salido del calabozo!";
+                score = maze[""]
                 maze = undefined;
+                main = require('./templates/felicitaciones.json');
             }
         }
 
-
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .reprompt('Intenta de nuevo. ', speakOutput)
+            .reprompt('intenta de nuevo', speakOutput)
+            .addDirective({
+               type : 'Alexa.Presentation.APL.RenderDocument',
+               version: '1.0',
+               document: main,
+               datasources: {
+                  "docdata": {
+                     "score": score
+                 }
+                }
+            })
             .getResponse();
     },
 };
@@ -404,7 +430,7 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'Indica qué dirección quieres seguir y ayúdame a salir del laberinto. Ten en cuenta que hay muchos niveles de dificultad. ¡Juntos podemos salir de aquí!';
+        const speakOutput = 'You can say hello to me! How can I help?';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -484,7 +510,7 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         console.log(`~~~~ Error handled: ${error.stack}`);
-        const speakOutput = `¡Ups!, he tenido un problema haciendo lo que me pediste. Por favor intenta de nuevo.`;
+        const speakOutput = `Sorry, I had trouble doing what you asked. Please try again.`;
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -498,6 +524,49 @@ function randomElement(regards){
 }
 
 /*function getSlotValues(filledSlots) {
+    const slotValues = {};
+
+    Object.keys(filledSlots).forEach((item) => {
+        const name  = filledSlots[item].name;
+
+        if (filledSlots[item] &&
+            filledSlots[item].resolutions &&
+            filledSlots[item].resolutions.resolutionsPerAuthority[0] &&
+            filledSlots[item].resolutions.resolutionsPerAuthority[0].status &&
+            filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
+            switch (filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
+                case 'ER_SUCCESS_MATCH':
+                    slotValues[name] = {
+                        heardAs: filledSlots[item].value,
+                        resolved: filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.name,
+                        ERstatus: 'ER_SUCCESS_MATCH'
+                    };
+                    break;
+                case 'ER_SUCCESS_NO_MATCH':
+                    slotValues[name] = {
+                        heardAs: filledSlots[item].value,
+                        resolved: '',
+                        ERstatus: 'ER_SUCCESS_NO_MATCH'
+                    };
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            slotValues[name] = {
+                heardAs: filledSlots[item].value || '', // may be null
+                resolved: '',
+                ERstatus: ''
+            };
+        }
+    }, this);
+
+    return slotValues;
+}
+*/
+
+/*
+function getSlotValues(filledSlots) {
     const slotValues = {};
 
     Object.keys(filledSlots).forEach((item) => {
