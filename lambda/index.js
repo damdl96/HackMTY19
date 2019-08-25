@@ -51,7 +51,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 3,
     "location": [1,1],
     "count": 0
-}, 
+},
 {   "Maze":  [[1,0,0,1,1],
             [0,0,0,0,1],
             [1,1,0,0,2],
@@ -60,7 +60,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 6,
     "location": [3,4],
     "count": 0
-}, 
+},
 {   "Maze":  [[0,2,0,0,1],
             [0,0,1,0,1],
             [0,1,0,0,1],
@@ -69,7 +69,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 6,
     "location": [0,1],
     "count": 0
-}, 
+},
 {   "Maze":  [[1,1,0,0,1],
             [3,0,0,0,0],
             [0,0,0,1,0],
@@ -78,7 +78,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 6,
     "location": [4,3],
     "count": 0
-}, 
+},
 {   "Maze":  [[0,0,0,0,1],
             [1,1,3,0,0],
             [1,1,1,0,1],
@@ -97,7 +97,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 8,
     "location": [5,1],
     "count": 0
-}, 
+},
 {   "Maze":  [[2,1,0,0,1,1],
             [0,1,0,0,3,0],
             [0,1,0,0,0,1],
@@ -107,7 +107,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 9,
     "location": [0,0],
     "count": 0
-}, 
+},
 {   "Maze":  [[0,0,0,1,1,1],
             [0,1,1,1,0,9],
             [0,0,0,0,0,2],
@@ -117,7 +117,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 6,
     "location": [2,5],
     "count": 0
-}, 
+},
 {   "Maze":  [[0,1,0,1,0,0],
             [0,0,3,1,0,0],
             [0,0,1,1,1,0],
@@ -127,7 +127,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 7,
     "location": [5,3],
     "count": 0
-}, 
+},
 {   "Maze":  [[1,0,0,1,1,0],
             [2,0,1,1,0,0],
             [0,0,0,0,1,0],
@@ -151,7 +151,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 5,
     "location": [3,1],
     "count": 0
-}, 
+},
 {   "Maze":  [[0,0,0,0,1,1,1],
             [0,0,1,1,0,1,1],
             [0,0,2,0,0,0,1],
@@ -162,7 +162,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 5,
     "location": [2,2],
     "count": 0
-}, 
+},
 {   "Maze":  [[0,0,0,3,0,0,1],
             [0,0,0,1,1,0,1],
             [0,1,1,2,0,0,0],
@@ -173,7 +173,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 10,
     "location": [2,3],
     "count": 0
-}, 
+},
 {   "Maze":  [[1,0,1,1,1,0,0],
             [0,0,2,0,0,1,1],
             [0,0,0,0,0,1,1],
@@ -184,7 +184,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 5,
     "location": [1,2],
     "count": 0
-}, 
+},
 {   "Maze":  [[1,0,0,0,1,0,0],
             [1,0,0,0,1,1,1],
             [1,1,3,0,0,0,1],
@@ -242,7 +242,7 @@ const WelcomeIntentHandler = {
         var person = request.intent.slots.name.value;
 
         const speakOutput = `Hola ${person}, selecciona la dificultad de tu calabozo: ¿1, 2, 3 o 4?`;
-        
+
         const main = require('./templates/welcome.json');
 
         return handlerInput.responseBuilder
@@ -285,7 +285,7 @@ const LevelIntentHandler = {
                         break;
             default: difficulty = 0;
         }
-        
+
         if (difficulty > 4 || difficulty < 1){
             speakOutput = "Opción inválida. Intenta de nuevo con un número del 1 al 4";
         } else {
@@ -313,7 +313,7 @@ const LevelIntentHandler = {
             }
         }
 
-        const main = require('./templates/caminando.json');
+        const main = require('./templates/walking.json');
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -336,17 +336,17 @@ const AnswerIntentHandler = {
     handle(handlerInput) {
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
-        
+
         var direction = request.intent.slots.answer.value;
         var main;
         var speakOutput;
         if(maze == undefined){
             speakOutput = "Elige una dificultad antes de decir alguna dirección."
-            
+
         } else {
             var flag = false;
             switch(direction){
-                case 'norte':   
+                case 'norte':
                     if (maze["location"][0] > 0){
                         if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] != 1){
                             maze["location"][0] = maze["location"][0] - 1;
@@ -381,10 +381,10 @@ const AnswerIntentHandler = {
             if(flag){
                 maze["count"] = maze["count"]+1;
                 speakOutput = `Hemos avanzado en dirección ${direction},`;
-                main = require('./templates/caminando.json');
+                main = require('./templates/walking.json');
             } else {
                 speakOutput = "Topamos contra una pared, hay que elegir otra opcion,";
-                main = require('./templates/muro.json');
+                main = require('./templates/wall.json');
             }
             speakOutput = speakOutput.concat(" ¿Cuál será el siguiente paso?");
             if (maze["location"][0] > 0){
@@ -411,7 +411,7 @@ const AnswerIntentHandler = {
                 speakOutput = "Lo logramos! hemos salido del calabozo!";
                 score = maze[""]
                 maze = undefined;
-                main = require('./templates/felicitaciones.json');
+                main = require('./templates/congratulations.json');
                 let speechOutput = `Tu puntaje es de: ${score}`;
                 let cardTitle = "¡Saliste del calabozo!"
                 let cardContent = `Tu puntaje es de: ${score}`;
@@ -460,9 +460,9 @@ const CancelAndStopIntentHandler = {
     },
     handle(handlerInput) {
         var farewell;
-        
+
         maze = undefined;
-        
+
         if(person == ''){
             farewell = randomElement([
                 `¡Nos vemos pronto! Te esperaré con ansias.`,
