@@ -1,881 +1,537 @@
-// Lambda Function code for Alexa.
-// Paste this into your index.js file.
+const Alexa = require('ask-sdk-core');
 
-const Alexa = require("ask-sdk");
-const https = require("https");
+//TODO: separar maps para limpiar codigo
+const maps = [[{   "Maze":  [[0,1,0,1],
+            [1,0,0,2],
+            [3,0,1,0],
+            [0,1,1,1]],
+    "steps": 4,
+    "location": [1,3],
+    "count": 0
+},
+{   "Maze":  [[0,0,1,0],
+            [3,0,0,0],
+            [0,1,0,0],
+            [1,0,2,0]],
+    "steps": 4,
+    "location": [3,2],
+    "count": 0
+},
+{   "Maze":  [[0,1,0,3],
+            [0,0,0,0],
+            [2,0,0,1],
+            [1,0,0,1]],
+    "steps": 5,
+    "location": [2,0],
+    "count": 0
+},
+{   "Maze":  [[3,0,0,0],
+            [0,0,1,1],
+            [0,0,1,0],
+            [0,0,0,2]],
+    "steps": 6,
+    "location": [3,3],
+    "count": 0
+},
+{   "Maze":  [[1,1,0,0],
+            [0,0,0,3],
+            [0,2,0,1],
+            [0,1,0,0]],
+    "steps": 3,
+    "location": [2,1],
+    "count": 0
+}],
+[{   "Maze":  [[1,1,0,0,0],
+            [1,2,0,1,1],
+            [1,0,0,1,0],
+            [0,0,3,0,0],
+            [1,0,0,0,0]],
+    "steps": 3,
+    "location": [1,1],
+    "count": 0
+},
+{   "Maze":  [[1,0,0,1,1],
+            [0,0,0,0,1],
+            [1,1,0,0,2],
+            [0,1,0,1,1],
+            [1,0,0,0,3]],
+    "steps": 6,
+    "location": [3,4],
+    "count": 0
+},
+{   "Maze":  [[0,2,0,0,1],
+            [0,0,1,0,1],
+            [0,1,0,0,1],
+            [1,1,1,0,0],
+            [1,1,1,3,1]],
+    "steps": 6,
+    "location": [0,1],
+    "count": 0
+},
+{   "Maze":  [[1,1,0,0,1],
+            [3,0,0,0,0],
+            [0,0,0,1,0],
+            [1,0,1,1,1],
+            [1,0,0,2,0]],
+    "steps": 6,
+    "location": [4,3],
+    "count": 0
+},
+{   "Maze":  [[0,0,0,0,1],
+            [1,1,3,0,0],
+            [1,1,1,0,1],
+            [1,1,2,0,1],
+            [0,0,0,0,0]],
+    "steps": 4,
+    "location": [3,2],
+    "count": 0
+}],
+[{   "Maze":  [[0,0,3,0,1,0],
+            [0,1,1,0,0,0],
+            [0,0,1,1,0,0],
+            [0,0,0,1,0,1],
+            [1,0,0,0,0,0],
+            [0,2,1,1,0,0]],
+    "steps": 8,
+    "location": [5,1],
+    "count": 0
+},
+{   "Maze":  [[2,1,0,0,1,1],
+            [0,1,0,0,3,0],
+            [0,1,0,0,0,1],
+            [0,0,0,0,0,0],
+            [1,0,0,1,1,0],
+            [1,0,1,0,0,1]],
+    "steps": 9,
+    "location": [0,0],
+    "count": 0
+},
+{   "Maze":  [[0,0,0,1,1,1],
+            [0,1,1,1,0,9],
+            [0,0,0,0,0,2],
+            [3,0,0,0,0,1],
+            [1,0,0,0,0,1],
+            [0,0,0,1,1,0]],
+    "steps": 6,
+    "location": [2,5],
+    "count": 0
+},
+{   "Maze":  [[0,1,0,1,0,0],
+            [0,0,3,1,0,0],
+            [0,0,1,1,1,0],
+            [1,0,0,0,0,0],
+            [1,0,1,0,0,0],
+            [0,0,1,2,0,0]],
+    "steps": 7,
+    "location": [5,3],
+    "count": 0
+},
+{   "Maze":  [[1,0,0,1,1,0],
+            [2,0,1,1,0,0],
+            [0,0,0,0,1,0],
+            [0,0,0,0,0,0],
+            [1,1,0,1,3,0],
+            [0,0,0,0,0,0]],
+    "steps": 7,
+    "location": [1,0],
+    "count": 0
+}],
 
 
 
-const invocationName = "salir de aquí";
+[{   "Maze":  [[0,0,0,0,0,0,1],
+            [0,0,0,0,1,0,1],
+            [1,0,1,1,0,0,1],
+            [0,2,0,0,0,0,0],
+            [0,0,1,0,0,0,0],
+            [0,1,0,0,0,0,0],
+            [0,1,1,3,0,0,1]],
+    "steps": 5,
+    "location": [3,1],
+    "count": 0
+},
+{   "Maze":  [[0,0,0,0,1,1,1],
+            [0,0,1,1,0,1,1],
+            [0,0,2,0,0,0,1],
+            [0,0,1,0,0,1,0],
+            [1,0,0,0,0,0,0],
+            [3,0,0,0,0,1,0],
+            [0,0,0,1,0,0,0]],
+    "steps": 5,
+    "location": [2,2],
+    "count": 0
+},
+{   "Maze":  [[0,0,0,3,0,0,1],
+            [0,0,0,1,1,0,1],
+            [0,1,1,2,0,0,0],
+            [0,0,0,0,0,0,0],
+            [1,0,0,1,0,1,0],
+            [0,1,0,0,1,0,0],
+            [0,0,0,1,0,1,1]],
+    "steps": 10,
+    "location": [2,3],
+    "count": 0
+},
+{   "Maze":  [[1,0,1,1,1,0,0],
+            [0,0,2,0,0,1,1],
+            [0,0,0,0,0,1,1],
+            [0,0,0,0,1,0,0],
+            [1,0,0,0,0,0,1],
+            [0,0,0,3,1,0,0],
+            [1,1,0,0,0,0,0]],
+    "steps": 5,
+    "location": [1,2],
+    "count": 0
+},
+{   "Maze":  [[1,0,0,0,1,0,0],
+            [1,0,0,0,1,1,1],
+            [1,1,3,0,0,0,1],
+            [0,0,0,0,1,0,1],
+            [0,1,1,0,0,0,0],
+            [1,0,0,0,0,1,1],
+            [1,1,2,0,0,0,1]],
+    "steps": 6,
+    "location": [6,2],
+    "count": 0
+}]];
 
-// Session Attributes
-//   Alexa will track attributes for you, by default only during the lifespan of your session.
-//   The history[] array will track previous request(s), used for contextual Help/Yes/No handling.
-//   Set up DynamoDB persistence to have the skill save and reload these attributes between skill sessions.
+var person;
+var maze = undefined;
+var difficulty;
+var score;
 
-function getMemoryAttributes() {   const memoryAttributes = {
-       "history":[],
-
-
-       "launchCount":0,
-       "lastUseTimestamp":0,
-
-       "lastSpeechOutput":{},
-       // "nextIntent":[]
-
-       // "favoriteColor":"",
-       // "name":"",
-       // "namePronounce":"",
-       // "email":"",
-       // "mobileNumber":"",
-       // "city":"",
-       // "state":"",
-       // "postcode":"",
-       // "birthday":"",
-       // "bookmark":0,
-       // "wishlist":[],
-   };
-   return memoryAttributes;
-};
-
-const maxHistorySize = 20; // remember only latest 20 intents
-
-
-// 1. Intent Handlers =============================================
-
-const AMAZON_CancelIntent_Handler =  {
+const LaunchRequestHandler = {
     canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.CancelIntent' ;
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        const responseBuilder = handlerInput.responseBuilder;
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
+        var regard = randomElement([
+            '¡Hola! Este es el juego que ganará el Hack Monterrey 2019. Empecemos.',
+            'Estoy muy feliz de jugar contigo. ¡Iniciemos!',
+            'Estoy segura que te divertirás. Empecemos ahora.',
+            '¡Estamos atrapados! ¡Hay que hacer algo!'
+        ]);
 
+        const speakOutput = regard + ' ¿Cómo te llamas?';
 
-        let say = 'Okay, talk to you later! ';
+        const main = require('./templates/launch.json');
 
-        return responseBuilder
-            .speak(say)
-            .withShouldEndSession(true)
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .addDirective({
+               type : 'Alexa.Presentation.APL.RenderDocument',
+               version: '1.0',
+               document: main,
+            })
             .getResponse();
-    },
+    }
 };
 
-const AMAZON_HelpIntent_Handler =  {
+const WelcomeIntentHandler = {
     canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.HelpIntent' ;
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'WelcomeIntent';
     },
     handle(handlerInput) {
+        const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
-        const responseBuilder = handlerInput.responseBuilder;
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
-        let history = sessionAttributes['history'];
-        let intents = getCustomIntents();
-        let sampleIntent = randomElement(intents);
+        var person = request.intent.slots.name.value;
 
-        let say = 'You asked for help. ';
+        const speakOutput = `Hola ${person}, selecciona la dificultad de tu calabozo: ¿1, 2, 3 o 4?`;
 
-        let previousIntent = getPreviousIntent(sessionAttributes);
-        if (previousIntent && !handlerInput.requestEnvelope.session.new) {
-             say += 'Your last intent was ' + previousIntent + '. ';
-         }
-        // say +=  'I understand  ' + intents.length + ' intents, '
+        const main = require('./templates/welcome.json');
 
-        say += ' Here something you can ask me, ' + getSampleUtterance(sampleIntent);
-
-        return responseBuilder
-            .speak(say)
-            .reprompt('try again, ' + say)
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .addDirective({
+               type : 'Alexa.Presentation.APL.RenderDocument',
+               version: '1.0',
+               document: main,
+               datasources: {
+                  "docdata": {
+                     "person": person
+                 }
+                }
+            })
             .getResponse();
-    },
+
+    }
 };
 
-const AMAZON_StopIntent_Handler =  {
+const LevelIntentHandler = {
     canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.StopIntent' ;
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'LevelIntent';
     },
     handle(handlerInput) {
+        const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
-        const responseBuilder = handlerInput.responseBuilder;
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
+        var type = request.intent.slots.difficulty.value;
+        var speakOutput;
+        switch(type) {
+            case '1': difficulty = 1;
+                        break;
+            case '2': difficulty = 2;
+                        break;
+            case '3': difficulty = 3;
+                        break;
+            case '4': difficulty = 4;
+                        break;
+            default: difficulty = 0;
+        }
 
-        let say = 'Okay, talk to you later! ';
-
-        return responseBuilder
-            .speak(say)
-            .withShouldEndSession(true)
-            .getResponse();
-    },
-};
-
-const WelcomeIntent_Handler =  {
-    canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' && request.intent.name === 'WelcomeIntent' ;
-    },
-    handle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        const responseBuilder = handlerInput.responseBuilder;
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-
-        let say = 'Hello from WelcomeIntent. ';
-
-
-        return responseBuilder
-            .speak(say)
-            .reprompt('try again, ' + say)
-            .getResponse();
-    },
-};
-
-const AMAZON_NavigateHomeIntent_Handler =  {
-    canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.NavigateHomeIntent' ;
-    },
-    handle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        const responseBuilder = handlerInput.responseBuilder;
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-
-        let say = 'Hello from AMAZON.NavigateHomeIntent. ';
-
-
-        return responseBuilder
-            .speak(say)
-            .reprompt('try again, ' + say)
-            .getResponse();
-    },
-};
-
-const AnswerIntent_Handler =  {
-    canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' && request.intent.name === 'AnswerIntent' ;
-    },
-    handle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        const responseBuilder = handlerInput.responseBuilder;
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-
-        let say = 'Hello from AnswerIntent. ';
-
-        let slotStatus = '';
-        let resolvedSlot;
-
-        let slotValues = getSlotValues(request.intent.slots);
-        // getSlotValues returns .heardAs, .resolved, and .isValidated for each slot, according to request slot status codes ER_SUCCESS_MATCH, ER_SUCCESS_NO_MATCH, or traditional simple request slot without resolutions
-
-        // console.log('***** slotValues: ' +  JSON.stringify(slotValues, null, 2));
-        //   SLOT: answer
-        if (slotValues.answer.heardAs && slotValues.answer.heardAs !== '') {
-            slotStatus += ' slot answer was heard as ' + slotValues.answer.heardAs + '. ';
+        if (difficulty > 4 || difficulty < 1){
+            speakOutput = "Opción inválida. Intenta de nuevo con un número del 1 al 4";
         } else {
-            slotStatus += 'slot answer is empty. ';
-        }
-        if (slotValues.answer.ERstatus === 'ER_SUCCESS_MATCH') {
-            slotStatus += 'a valid ';
-            if(slotValues.answer.resolved !== slotValues.answer.heardAs) {
-                slotStatus += 'synonym for ' + slotValues.answer.resolved + '. ';
-                } else {
-                slotStatus += 'match. '
-            } // else {
-                //
-        }
-        if (slotValues.answer.ERstatus === 'ER_SUCCESS_NO_MATCH') {
-            slotStatus += 'which did not match any slot value. ';
-            console.log('***** consider adding "' + slotValues.answer.heardAs + '" to the custom slot type used by slot answer! ');
+            maze = maps[difficulty - 1][Math.floor(Math.random() * 5)];
+            speakOutput = `Estamos atrapados, esta demasiado oscuro aquí dentro, puedo guiarte pero, debemos apresurarnos tenemos poco tiempo para salir antes que tu antorcha se extinga. ¡Adelante! nos podemos mover hacia`;
+            if (maze["location"][0] > 0){
+                if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] != 1){
+                    speakOutput = speakOutput.concat(" norte");
+                }
+            }
+            if(maze["location"][0] < (maze["Maze"].length - 1)) {
+                if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] != 1){
+                    speakOutput = speakOutput.concat(" sur");
+                }
+            }
+            if(maze["location"][1] < (maze["Maze"].length - 1)) {
+                if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] != 1){
+                    speakOutput = speakOutput.concat(" este");
+                }
+            }
+            if (maze["location"][1] > 0){
+                if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] != 1){
+                    speakOutput = speakOutput.concat(" oeste");
+                }
+            }
         }
 
-        if( (slotValues.answer.ERstatus === 'ER_SUCCESS_NO_MATCH') ||  (!slotValues.answer.heardAs) ) {
-           // slotStatus += 'A few valid values are, ' + sayArray(getExampleSlotValues('AnswerIntent','answer'), 'or');
+        const main = require('./templates/walking.json');
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .addDirective({
+               type : 'Alexa.Presentation.APL.RenderDocument',
+               version: '1.0',
+               document: main,
+            })
+            .getResponse();
+
+    }
+};
+
+const AnswerIntentHandler = {
+    canHandle(handlerInput) {
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'AnswerIntent';
+    },
+    handle(handlerInput) {
+        const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
+        const request = handlerInput.requestEnvelope.request;
+
+        var direction = request.intent.slots.answer.value;
+        var main;
+        var speakOutput;
+        if(maze == undefined){
+            speakOutput = "Elige una dificultad antes de decir alguna dirección."
+
+        } else {
+            maze["count"] = maze["count"]+1;
+            var flag = false;
+            switch(direction){
+                case 'norte':
+                    if (maze["location"][0] > 0){
+                        if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] != 1){
+                            maze["location"][0] = maze["location"][0] - 1;
+                            flag = true;
+                        }
+                    }
+                    break;
+                case 'sur':
+                    if(maze["location"][0] < (maze["Maze"].length - 1)) {
+                        if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] != 1){
+                            maze["location"][0] = maze["location"][0] + 1;
+                            flag = true;
+                        }
+                    }
+                    break;
+                case 'este':
+                    if(maze["location"][1] < (maze["Maze"].length - 1)) {
+                        if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] != 1){
+                            maze["location"][1] = maze["location"][1] + 1;
+                            flag = true;
+                        }
+                    }
+                    break;
+                case 'oeste':
+                    if (maze["location"][1] > 0){
+                        if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] != 1){
+                            maze["location"][1] = maze["location"][1] - 1;
+                            flag = true;
+                        }
+                    }
+                    break;
+            }
+            if(flag){
+                speakOutput = `Hemos avanzado en dirección ${direction},`;
+                main = require('./templates/walking.json');
+            } else {
+                speakOutput = "Topamos contra una pared, hay que elegir otra opcion,";
+                main = require('./templates/wall.json');
+            }
+            speakOutput = speakOutput.concat(" ¿Cuál será el siguiente paso?");
+            if (maze["location"][0] > 0){
+                if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] != 1){
+                    speakOutput = speakOutput.concat(" norte");
+                }
+            }
+            if(maze["location"][0] < (maze["Maze"].length - 1)) {
+                if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] != 1){
+                    speakOutput = speakOutput.concat(" sur");
+                }
+            }
+            if(maze["location"][1] < (maze["Maze"].length - 1)) {
+                if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] != 1){
+                    speakOutput = speakOutput.concat(" este");
+                }
+            }
+            if (maze["location"][1] > 0){
+                if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] != 1){
+                    speakOutput = speakOutput.concat(" oeste");
+                }
+            }
+            if(maze["Maze"][maze["location"][0]][maze["location"][1]] == 3){
+                speakOutput = "Lo logramos! hemos salido del calabozo! Ahora di el nombre de la siguiente victima";
+                score = Math.floor((maze["steps"]/maze["count"])*100);
+                maze = undefined;
+                main = require('./templates/felicitaciones.json');
+            }
         }
 
-        say += slotStatus;
-
-
-        return responseBuilder
-            .speak(say)
-            .reprompt('try again, ' + say)
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt('intenta de nuevo', speakOutput)
+            .addDirective({
+               type : 'Alexa.Presentation.APL.RenderDocument',
+               version: '1.0',
+               document: main,
+               datasources: {
+                  "docdata": {
+                     "score": score
+                 }
+                }
+            })
             .getResponse();
     },
 };
 
-const LaunchRequest_Handler =  {
+const HelpIntentHandler = {
     canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'LaunchRequest';
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const responseBuilder = handlerInput.responseBuilder;
+        const speakOutput = 'You can say hello to me! How can I help?';
 
-        let say = randomElement(['hello','hi', 'greetings'])  + ' and welcome to ' + invocationName + ' ! Say help to hear some options.';
-
-        let skillTitle = capitalize(invocationName);
-
-        if (supportsDisplay(handlerInput)) {
-            const myImage1 = new Alexa.ImageHelper()
-               .addImageInstance(DisplayImg1.url)
-               .getImage();
-
-            const myImage2 = new Alexa.ImageHelper()
-               .addImageInstance(DisplayImg2.url)
-               .getImage();
-
-            const primaryText = new Alexa.RichTextContentHelper()
-               .withPrimaryText('Welcome to the skill!')
-               .getTextContent();
-
-            responseBuilder.addRenderTemplateDirective({
-               type : 'BodyTemplate2',
-               token : 'string',
-               backButton : 'HIDDEN',
-               backgroundImage: myImage2,
-               image: myImage1,
-               title: skillTitle,
-               textContent: primaryText,
-             });
-        }
-
-        return responseBuilder
-            .speak(say)
-            .reprompt('try again, ' + say)
-            .withStandardCard('Welcome!',
-              'Hello!\nThis is a card for your skill, ' + skillTitle,
-               welcomeCardImg.smallImageUrl, welcomeCardImg.largeImageUrl)
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
             .getResponse();
-    },
+    }
 };
 
-const SessionEndedHandler =  {
+
+const CancelAndStopIntentHandler = {
     canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'SessionEndedRequest';
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent'
+                || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        console.log(`Session ended with reason: ${handlerInput.requestEnvelope.request.reason}`);
+        var farewell;
+
+        maze = undefined;
+
+        if(person == ''){
+            farewell = randomElement([
+                `¡Nos vemos pronto! Te esperaré con ansias.`,
+                `¡Adiós!`,
+            ]);
+        } else {
+           farewell = randomElement([
+                `¡Nos vemos pronto ${person}! Te esperaré con ansias.`,
+                `¡Adiós ${person}!`,
+            ]);
+        }
+
+        const speakOutput = farewell;
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .getResponse();
+    }
+};
+
+const SessionEndedRequestHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
+    },
+    handle(handlerInput) {
+        person = '';
         return handlerInput.responseBuilder.getResponse();
     }
 };
 
-const ErrorHandler =  {
-    canHandle() {
-        return true;
+const IntentReflectorHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest';
     },
-    handle(handlerInput, error) {
-        const request = handlerInput.requestEnvelope.request;
-
-        console.log(`Error handled: ${error.message}`);
-        // console.log(`Original Request was: ${JSON.stringify(request, null, 2)}`);
+    handle(handlerInput) {
+        const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
+        const speakOutput = `You just triggered ${intentName}`;
 
         return handlerInput.responseBuilder
-            .speak(`Sorry, your skill got this error.  ${error.message} `)
-            .reprompt(`Sorry, your skill got this error.  ${error.message} `)
+            .speak(speakOutput)
             .getResponse();
     }
 };
 
-
-// 2. Constants ===========================================================================
-
-    // Here you can define static data, to be used elsewhere in your code.  For example:
-    //    const myString = "Hello World";
-    //    const myArray  = [ "orange", "grape", "strawberry" ];
-    //    const myObject = { "city": "Boston",  "state":"Massachusetts" };
-
-const APP_ID = undefined;  // TODO replace with your Skill ID (OPTIONAL).
-
-// 3.  Helper Functions ===================================================================
-
-function capitalize(myString) {
-
-     return myString.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); }) ;
-}
-
-
-function randomElement(myArray) {
-    return(myArray[Math.floor(Math.random() * myArray.length)]);
-}
-
-function stripSpeak(str) {
-    return(str.replace('<speak>', '').replace('</speak>', ''));
-}
-
-
-
-
-function getSlotValues(filledSlots) {
-    const slotValues = {};
-
-    Object.keys(filledSlots).forEach((item) => {
-        const name  = filledSlots[item].name;
-
-        if (filledSlots[item] &&
-            filledSlots[item].resolutions &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0] &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-            switch (filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-                case 'ER_SUCCESS_MATCH':
-                    slotValues[name] = {
-                        heardAs: filledSlots[item].value,
-                        resolved: filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.name,
-                        ERstatus: 'ER_SUCCESS_MATCH'
-                    };
-                    break;
-                case 'ER_SUCCESS_NO_MATCH':
-                    slotValues[name] = {
-                        heardAs: filledSlots[item].value,
-                        resolved: '',
-                        ERstatus: 'ER_SUCCESS_NO_MATCH'
-                    };
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            slotValues[name] = {
-                heardAs: filledSlots[item].value || '', // may be null
-                resolved: '',
-                ERstatus: ''
-            };
-        }
-    }, this);
-
-    return slotValues;
-}
-
-function getExampleSlotValues(intentName, slotName) {
-
-    let examples = [];
-    let slotType = '';
-    let slotValuesFull = [];
-
-    let intents = model.interactionModel.languageModel.intents;
-    for (let i = 0; i < intents.length; i++) {
-        if (intents[i].name == intentName) {
-            let slots = intents[i].slots;
-            for (let j = 0; j < slots.length; j++) {
-                if (slots[j].name === slotName) {
-                    slotType = slots[j].type;
-
-                }
-            }
-        }
-
-    }
-    let types = model.interactionModel.languageModel.types;
-    for (let i = 0; i < types.length; i++) {
-        if (types[i].name === slotType) {
-            slotValuesFull = types[i].values;
-        }
-    }
-
-    slotValuesFull = shuffleArray(slotValuesFull);
-
-    examples.push(slotValuesFull[0].name.value);
-    examples.push(slotValuesFull[1].name.value);
-    if (slotValuesFull.length > 2) {
-        examples.push(slotValuesFull[2].name.value);
-    }
-
-
-    return examples;
-}
-
-function sayArray(myData, penultimateWord = 'and') {
-    let result = '';
-
-    myData.forEach(function(element, index, arr) {
-
-        if (index === 0) {
-            result = element;
-        } else if (index === myData.length - 1) {
-            result += ` ${penultimateWord} ${element}`;
-        } else {
-            result += `, ${element}`;
-        }
-    });
-    return result;
-}
-function supportsDisplay(handlerInput) // returns true if the skill is running on a device with a display (Echo Show, Echo Spot, etc.)
-{                                      //  Enable your skill for display as shown here: https://alexa.design/enabledisplay
-    const hasDisplay =
-        handlerInput.requestEnvelope.context &&
-        handlerInput.requestEnvelope.context.System &&
-        handlerInput.requestEnvelope.context.System.device &&
-        handlerInput.requestEnvelope.context.System.device.supportedInterfaces &&
-        handlerInput.requestEnvelope.context.System.device.supportedInterfaces.Display;
-
-    return hasDisplay;
-}
-
-
-const welcomeCardImg = {
-    smallImageUrl: "https://s3.amazonaws.com/skill-images-789/cards/card_plane720_480.png",
-    largeImageUrl: "https://s3.amazonaws.com/skill-images-789/cards/card_plane1200_800.png"
-
-
-};
-
-const DisplayImg1 = {
-    title: 'Jet Plane',
-    url: 'https://s3.amazonaws.com/skill-images-789/display/plane340_340.png'
-};
-const DisplayImg2 = {
-    title: 'Starry Sky',
-    url: 'https://s3.amazonaws.com/skill-images-789/display/background1024_600.png'
-
-};
-
-function getCustomIntents() {
-    const modelIntents = model.interactionModel.languageModel.intents;
-
-    let customIntents = [];
-
-
-    for (let i = 0; i < modelIntents.length; i++) {
-
-        if(modelIntents[i].name.substring(0,7) != "AMAZON." && modelIntents[i].name !== "LaunchRequest" ) {
-            customIntents.push(modelIntents[i]);
-        }
-    }
-    return customIntents;
-}
-
-function getSampleUtterance(intent) {
-
-    return randomElement(intent.samples);
-
-}
-
-function getPreviousIntent(attrs) {
-
-    if (attrs.history && attrs.history.length > 1) {
-        return attrs.history[attrs.history.length - 2].IntentRequest;
-
-    } else {
-        return false;
-    }
-
-}
-
-function getPreviousSpeechOutput(attrs) {
-
-    if (attrs.lastSpeechOutput && attrs.history.length > 1) {
-        return attrs.lastSpeechOutput;
-
-    } else {
-        return false;
-    }
-
-}
-
-function timeDelta(t1, t2) {
-
-    const dt1 = new Date(t1);
-    const dt2 = new Date(t2);
-    const timeSpanMS = dt2.getTime() - dt1.getTime();
-    const span = {
-        "timeSpanMIN": Math.floor(timeSpanMS / (1000 * 60 )),
-        "timeSpanHR": Math.floor(timeSpanMS / (1000 * 60 * 60)),
-        "timeSpanDAY": Math.floor(timeSpanMS / (1000 * 60 * 60 * 24)),
-        "timeSpanDesc" : ""
-    };
-
-
-    if (span.timeSpanHR < 2) {
-        span.timeSpanDesc = span.timeSpanMIN + " minutes";
-    } else if (span.timeSpanDAY < 2) {
-        span.timeSpanDesc = span.timeSpanHR + " hours";
-    } else {
-        span.timeSpanDesc = span.timeSpanDAY + " days";
-    }
-
-
-    return span;
-
-}
-
-
-const InitMemoryAttributesInterceptor = {
-    process(handlerInput) {
-        let sessionAttributes = {};
-        if(handlerInput.requestEnvelope.session['new']) {
-
-            sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-
-            let memoryAttributes = getMemoryAttributes();
-
-            if(Object.keys(sessionAttributes).length === 0) {
-
-                Object.keys(memoryAttributes).forEach(function(key) {  // initialize all attributes from global list
-
-                    sessionAttributes[key] = memoryAttributes[key];
-
-                });
-
-            }
-            handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
-
-
-        }
+const ErrorHandler = {
+    canHandle() {
+        return true;
+    },
+    handle(handlerInput, error) {
+        const speakOutput = `Sorry, ${error.stack}`;
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .getResponse();
     }
 };
 
-const RequestHistoryInterceptor = {
-    process(handlerInput) {
-
-        const thisRequest = handlerInput.requestEnvelope.request;
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-
-        let history = sessionAttributes['history'] || [];
-
-        let IntentRequest = {};
-        if (thisRequest.type === 'IntentRequest' ) {
-
-            let slots = [];
-
-            IntentRequest = {
-                'IntentRequest' : thisRequest.intent.name
-            };
-
-            if (thisRequest.intent.slots) {
-
-                for (let slot in thisRequest.intent.slots) {
-                    let slotObj = {};
-                    slotObj[slot] = thisRequest.intent.slots[slot].value;
-                    slots.push(slotObj);
-                }
-
-                IntentRequest = {
-                    'IntentRequest' : thisRequest.intent.name,
-                    'slots' : slots
-                };
-
-            }
-
-        } else {
-            IntentRequest = {'IntentRequest' : thisRequest.type};
-        }
-        if(history.length > maxHistorySize - 1) {
-            history.shift();
-        }
-        history.push(IntentRequest);
-
-        handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
-
-    }
-
-};
-
-
-
-
-const RequestPersistenceInterceptor = {
-    process(handlerInput) {
-
-        if(handlerInput.requestEnvelope.session['new']) {
-
-            return new Promise((resolve, reject) => {
-
-                handlerInput.attributesManager.getPersistentAttributes()
-
-                    .then((sessionAttributes) => {
-                        sessionAttributes = sessionAttributes || {};
-
-
-                        sessionAttributes['launchCount'] += 1;
-
-                        handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
-
-                        handlerInput.attributesManager.savePersistentAttributes()
-                            .then(() => {
-                                resolve();
-                            })
-                            .catch((err) => {
-                                reject(err);
-                            });
-                    });
-
-            });
-
-        } // end session['new']
-    }
-};
-
-
-const ResponseRecordSpeechOutputInterceptor = {
-    process(handlerInput, responseOutput) {
-
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-        let lastSpeechOutput = {
-            "outputSpeech":responseOutput.outputSpeech.ssml,
-            "reprompt":responseOutput.reprompt.outputSpeech.ssml
-        };
-
-        sessionAttributes['lastSpeechOutput'] = lastSpeechOutput;
-
-        handlerInput.attributesManager.setSessionAttributes(sessionAttributes);
-
-    }
-};
-
-const ResponsePersistenceInterceptor = {
-    process(handlerInput, responseOutput) {
-
-        const ses = (typeof responseOutput.shouldEndSession == "undefined" ? true : responseOutput.shouldEndSession);
-
-        if(ses || handlerInput.requestEnvelope.request.type == 'SessionEndedRequest') { // skill was stopped or timed out
-
-            let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
-
-            sessionAttributes['lastUseTimestamp'] = new Date(handlerInput.requestEnvelope.request.timestamp).getTime();
-
-            handlerInput.attributesManager.setPersistentAttributes(sessionAttributes);
-
-            return new Promise((resolve, reject) => {
-                handlerInput.attributesManager.savePersistentAttributes()
-                    .then(() => {
-                        resolve();
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
-
-            });
-
-        }
-
-    }
-};
-
-
-function shuffleArray(array) {  // Fisher Yates shuffle!
-
-    let currentIndex = array.length, temporaryValue, randomIndex;
-
-    while (0 !== currentIndex) {
-
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
+function randomElement(regards){
+    return regards[Math.floor(Math.random()*regards.length)];
 }
-// 4. Exports handler function and setup ===================================================
-const skillBuilder = Alexa.SkillBuilders.standard();
-exports.handler = skillBuilder
+
+exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
-        AMAZON_CancelIntent_Handler,
-        AMAZON_HelpIntent_Handler,
-        AMAZON_StopIntent_Handler,
-        WelcomeIntent_Handler,
-        AMAZON_NavigateHomeIntent_Handler,
-        AnswerIntent_Handler,
-        LaunchRequest_Handler,
-        SessionEndedHandler
+        LaunchRequestHandler,
+        WelcomeIntentHandler,
+        LevelIntentHandler,
+        AnswerIntentHandler,
+        HelpIntentHandler,
+        CancelAndStopIntentHandler,
+        SessionEndedRequestHandler,
+        IntentReflectorHandler,
     )
-    .addErrorHandlers(ErrorHandler)
-    .addRequestInterceptors(InitMemoryAttributesInterceptor)
-    .addRequestInterceptors(RequestHistoryInterceptor)
-
-   // .addResponseInterceptors(ResponseRecordSpeechOutputInterceptor)
-
- // .addRequestInterceptors(RequestPersistenceInterceptor)
- // .addResponseInterceptors(ResponsePersistenceInterceptor)
-
- // .withTableName("askMemorySkillTable")
- // .withAutoCreateTable(true)
-
+    .addErrorHandlers(
+        ErrorHandler,
+    )
     .lambda();
-
-
-// End of Skill code -------------------------------------------------------------
-// Static Language Model for reference
-
-const model = {
-  "interactionModel": {
-    "languageModel": {
-      "invocationName": "salir de aquí",
-      "intents": [
-        {
-          "name": "AMAZON.CancelIntent",
-          "samples": [
-            "detente",
-            "alto",
-            "parar",
-            "cancelar",
-            "cancela",
-            "para"
-          ]
-        },
-        {
-          "name": "AMAZON.HelpIntent",
-          "samples": [
-            "explica",
-            "explícales",
-            "explícanos",
-            "explícame",
-            "necesito",
-            "cómo",
-            "ayúdales",
-            "apóyales",
-            "apóyalos",
-            "apóyanos",
-            "apóyame",
-            "ayúdalos",
-            "ayúdanos",
-            "ayúdame",
-            "apoyo",
-            "ayuda"
-          ]
-        },
-        {
-          "name": "AMAZON.StopIntent",
-          "samples": [
-            "jugaremos pronto",
-            "jugaremos después",
-            "jugaremos luego",
-            "hasta después",
-            "hasta luego",
-            "hasta la siguiente",
-            "jugarán luego",
-            "jugarán después",
-            "juego luego",
-            "jugamos luego",
-            "juego después",
-            "jugamos después",
-            "hasta la próxima",
-            "nos vemos pronto",
-            "hasta pronto",
-            "nos vemos",
-            "queremos salir",
-            "quiero salir",
-            "sal",
-            "salir del juego"
-          ]
-        },
-        {
-          "name": "WelcomeIntent",
-          "slots": [],
-          "samples": [
-            "diles hola",
-            "salúdales",
-            "salúdalos",
-            "salúdanos",
-            "salúdame",
-            "dinos hola",
-            "dime hola",
-            "di hola",
-            "cómo estás",
-            "hola"
-          ]
-        },
-        {
-          "name": "AMAZON.NavigateHomeIntent",
-          "samples": []
-        },
-        {
-          "name": "AnswerIntent",
-          "slots": [
-            {
-              "name": "answer",
-              "type": "DirectionSlot"
-            }
-          ],
-          "samples": [
-            "se quieren ir al {answer}",
-            "nos queremos ir a la {answer}",
-            "nos queremos ir al {answer}",
-            "me quiero ir a la {answer}",
-            "me quiero ir al {answer}",
-            "dirígelos a la {answer}",
-            "dirígelos al {answer}",
-            "dirígenos al {answer}",
-            "dirígeme a la {answer}",
-            "dirígenos a la {answer}",
-            "dirígeme al {answer}",
-            "nos vamos al {answer}",
-            "nos vamos a la {answer}",
-            "se quieren ir a la {answer}",
-            "mi decisión es {answer}",
-            "nuestra decisión es {answer}",
-            "nuestra decisión es la {answer}",
-            "nuestra decisión es a la {answer}",
-            "mi decisión es a la {answer}",
-            "mi decisión es la {answer}",
-            "su decisión es a la {answer}",
-            "su decisión es la {answer}",
-            "ellos deciden que la {answer}",
-            "ellos deciden que al {answer}",
-            "ellos deciden {answer}",
-            "llévame a la {answer}",
-            "llévalos a la {answer}",
-            "llévalos al {answer}",
-            "llevános al {answer}",
-            "llévanos a la {answer}",
-            "llévame al {answer}",
-            "vámonos al {answer}",
-            "me voy a la {answer}",
-            "me voy al {answer}",
-            "{answer}"
-          ]
-        },
-        {
-          "name": "LaunchRequest"
-        }
-      ],
-      "types": [
-        {
-          "name": "DirectionSlot",
-          "values": [
-            {
-              "name": {
-                "value": "oeste",
-                "synonyms": [
-                  "izquierda"
-                ]
-              }
-            },
-            {
-              "name": {
-                "value": "este",
-                "synonyms": [
-                  "derecha"
-                ]
-              }
-            },
-            {
-              "name": {
-                "value": "sur",
-                "synonyms": [
-                  "atrás"
-                ]
-              }
-            },
-            {
-              "name": {
-                "value": "norte",
-                "synonyms": [
-                  "adelante",
-                  "enfrente"
-                ]
-              }
-            }
-          ]
-        }
-      ]
-    }
-  }
-};

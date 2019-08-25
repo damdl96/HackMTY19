@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "salir de aquí",
+            "invocationName": "sacame de aquí",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
@@ -62,18 +62,16 @@
                 },
                 {
                     "name": "WelcomeIntent",
-                    "slots": [],
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.FirstName"
+                        }
+                    ],
                     "samples": [
-                        "diles hola",
-                        "salúdales",
-                        "salúdalos",
-                        "salúdanos",
-                        "salúdame",
-                        "dinos hola",
-                        "dime hola",
-                        "di hola",
-                        "cómo estás",
-                        "hola"
+                        "{name}",
+                        "me llamo {name}",
+                        "mi nombre es {name}"
                     ]
                 },
                 {
@@ -89,6 +87,21 @@
                         }
                     ],
                     "samples": [
+                        "ustedes dicen {answer}",
+                        "ellos dicen {answer}",
+                        "ellas dicen {answer}",
+                        "nosotras decimos {answer}",
+                        "nosotros decimos {answer}",
+                        "él dice {answer}",
+                        "ella dice {answer}",
+                        "yo digo {answer}",
+                        "la respuesta de todos es {answer}",
+                        "la respuesta de ellas es {answer}",
+                        "la respuesta es {answer}",
+                        "la respuesta de ellos es {answer}",
+                        "su respuesta es {answer}",
+                        "nuestra respuesta es {answer}",
+                        "mi respuesta es {answer}",
                         "se quieren ir al {answer}",
                         "nos queremos ir a la {answer}",
                         "nos queremos ir al {answer}",
@@ -124,6 +137,60 @@
                         "me voy a la {answer}",
                         "me voy al {answer}",
                         "{answer}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.MoreIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateSettingsIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NextIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PreviousIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollRightIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollLeftIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "LevelIntent",
+                    "slots": [
+                        {
+                            "name": "difficulty",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "yo digo {difficulty}",
+                        "{difficulty}",
+                        "Mi numero es {difficulty}"
                     ]
                 }
             ],
