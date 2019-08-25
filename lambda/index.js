@@ -362,6 +362,7 @@ const AnswerIntentHandler = {
                 speakOutput = `Hemos avanzado en dirección ${direction},`;
             } else {
                 speakOutput = "Topamos contra una pared, hay que elegir otra opcion,";
+                
             }
             speakOutput = speakOutput.concat(" ¿Cuál será el siguiente paso?");
             if (maze["location"][0] > 0){
