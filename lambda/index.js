@@ -50,21 +50,23 @@ const WelcomeIntentHandler = {
 
     }
 };
-/*
+
 const AnswerIntentHandler = {
     canHandle(handlerInput) {
-        const request = handlerInput.requestEnvelope.request;
-        return request.type === 'IntentRequest' && request.intent.name === 'AnswerIntent' ;
+        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+            && handlerInput.requestEnvelope.request.intent.name === 'AnswerIntent';
     },
     handle(handlerInput) {
+        const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
-        const responseBuilder = handlerInput.responseBuilder;
-        let sessionAttributes = handlerInput.attributesManager.getSessionAttributes();
 
-        let say = 'Hello from AnswerIntent. ';
+        var direction = request.intent.slots.answer.value;
 
-        let slotStatus = '';
-        let resolvedSlot;
+        const speakOutput = `Su decisión fue: ${direction}`;
+
+        /*
+            let slotStatus = '';
+            let resolvedSlot;
 
         let slotValues = getSlotValues(request.intent.slots);
         // getSlotValues returns .heardAs, .resolved, and .isValidated for each slot, according to request slot status codes ER_SUCCESS_MATCH, ER_SUCCESS_NO_MATCH, or traditional simple request slot without resolutions
@@ -76,34 +78,35 @@ const AnswerIntentHandler = {
         } else {
             slotStatus += 'slot answer is empty. ';
         }
-        if (slotValues.answer.ERstatus === 'ER_SUCCESS_MATCH') {
-            slotStatus += 'a valid ';
-            if(slotValues.answer.resolved !== slotValues.answer.heardAs) {
-                slotStatus += 'synonym for ' + slotValues.answer.resolved + '. ';
-                } else {
-                slotStatus += 'match. '
-            } // else {
-                //
-        }
-        if (slotValues.answer.ERstatus === 'ER_SUCCESS_NO_MATCH') {
-            slotStatus += 'which did not match any slot value. ';
-            console.log('***** consider adding "' + slotValues.answer.heardAs + '" to the custom slot type used by slot answer! ');
-        }
+                    if (slotValues.answer.ERstatus === 'ER_SUCCESS_MATCH') {
+                        slotStatus += 'a valid ';
+                        if(slotValues.answer.resolved !== slotValues.answer.heardAs) {
+                            slotStatus += 'synonym for ' + slotValues.answer.resolved + '. ';
+                            } else {
+                            slotStatus += 'match. '
+                        } // else {
+                            //
+                    }
+                    if (slotValues.answer.ERstatus === 'ER_SUCCESS_NO_MATCH') {
+                        slotStatus += 'which did not match any slot value. ';
+                        console.log('***** consider adding "' + slotValues.answer.heardAs + '" to the custom slot type used by slot answer! ');
+                    }
 
-        if( (slotValues.answer.ERstatus === 'ER_SUCCESS_NO_MATCH') ||  (!slotValues.answer.heardAs) ) {
-           // slotStatus += 'A few valid values are, ' + sayArray(getExampleSlotValues('AnswerIntent','answer'), 'or');
-        }
+                    if( (slotValues.answer.ERstatus === 'ER_SUCCESS_NO_MATCH') ||  (!slotValues.answer.heardAs) ) {
+                       // slotStatus += 'A few valid values are, ' + sayArray(getExampleSlotValues('AnswerIntent','answer'), 'or');
+                    }
 
         say += slotStatus;
+        */
 
 
-        return responseBuilder
-            .speak(say)
-            .reprompt('try again, ' + say)
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt('intenta de nuevo', speakOutput)
             .getResponse();
     },
 };
-*/
+
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -185,7 +188,7 @@ function randomElement(regards){
     return regards[Math.floor(Math.random()*regards.length)];
 }
 
-function getSlotValues(filledSlots) {
+/*function getSlotValues(filledSlots) {
     const slotValues = {};
 
     Object.keys(filledSlots).forEach((item) => {
@@ -225,6 +228,7 @@ function getSlotValues(filledSlots) {
 
     return slotValues;
 }
+*/
 
 /*
 function getSlotValues(filledSlots) {
@@ -276,7 +280,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         WelcomeIntentHandler,
-        //AnswerIntentHandler,
+        AnswerIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
