@@ -312,9 +312,16 @@ const LevelIntentHandler = {
             }
         }
 
+        const main = require('./templates/caminando.json');
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
+            .addDirective({
+               type : 'Alexa.Presentation.APL.RenderDocument',
+               version: '1.0',
+               document: main,
+            })
             .getResponse();
 
     }
