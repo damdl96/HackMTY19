@@ -1,12 +1,12 @@
 {
-  "name": "hello-world",
-  "version": "1.1.0",
-  "description": "alexa utility for quickly building skills",
+  "name": "corre-alexa-corre",
+  "version": "1.0.0",
+  "description": "aleka skill for having a good time while we improve our short term memory",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error\" && exit 1"
   },
-  "author": "Amazon Alexa",
+  "author": "Flying Kiwi",
   "license": "ISC",
   "dependencies": {
     "ask-sdk-core": "^2.6.0",
