@@ -1,7 +1,5 @@
-// This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK (v2).
-// Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
-// session persistence, api calls, and more.
 const Alexa = require('ask-sdk-core');
+
 //TODO: separar maps para limpiar codigo
 const maps = [[{   "Maze":  [[0,1,0,1],
             [1,0,0,2],
@@ -344,6 +342,7 @@ const AnswerIntentHandler = {
             speakOutput = "Elige una dificultad antes de decir alguna dirección."
 
         } else {
+            maze["count"] = maze["count"]+1;
             var flag = false;
             switch(direction){
                 case 'norte':
@@ -374,12 +373,12 @@ const AnswerIntentHandler = {
                     if (maze["location"][1] > 0){
                         if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] != 1){
                             maze["location"][1] = maze["location"][1] - 1;
+                            flag = true;
                         }
                     }
                     break;
             }
             if(flag){
-                maze["count"] = maze["count"]+1;
                 speakOutput = `Hemos avanzado en dirección ${direction},`;
                 main = require('./templates/walking.json');
             } else {
@@ -408,14 +407,10 @@ const AnswerIntentHandler = {
                 }
             }
             if(maze["Maze"][maze["location"][0]][maze["location"][1]] == 3){
-                speakOutput = "Lo logramos! hemos salido del calabozo!";
-                score = maze[""]
+                speakOutput = "Lo logramos! hemos salido del calabozo! Ahora di el nombre de la siguiente victima";
+                score = Math.floor((maze["steps"]/maze["count"])*100);
                 maze = undefined;
-                main = require('./templates/congratulations.json');
-                let speechOutput = `Tu puntaje es de: ${score}`;
-                let cardTitle = "¡Saliste del calabozo!"
-                let cardContent = `Tu puntaje es de: ${score}`;
-                this.emit(':askWithCard', speechOutput, cardTitle, cardContent);
+                main = require('./templates/felicitaciones.json');
             }
         }
 
@@ -488,16 +483,11 @@ const SessionEndedRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
     },
     handle(handlerInput) {
-        // Any cleanup logic goes here.
         person = '';
         return handlerInput.responseBuilder.getResponse();
     }
 };
 
-// The intent reflector is used for interaction model testing and debugging.
-// It will simply repeat the intent the user said. You can create custom handlers
-// for your intents by defining them above, then also adding them to the request
-// handler chain below.
 const IntentReflectorHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest';
@@ -508,21 +498,16 @@ const IntentReflectorHandler = {
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
             .getResponse();
     }
 };
 
-// Generic error handling to capture any syntax or routing errors. If you receive an error
-// stating the request handler chain is not found, you have not implemented a handler for
-// the intent being invoked or included it in the skill builder below.
 const ErrorHandler = {
     canHandle() {
         return true;
     },
     handle(handlerInput, error) {
-        console.log(`~~~~ Error handled: ${error.stack}`);
-        const speakOutput = `Sorry, I had trouble doing what you asked. Please try again.`;
+        const speakOutput = `Sorry, ${error.stack}`;
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -535,94 +520,6 @@ function randomElement(regards){
     return regards[Math.floor(Math.random()*regards.length)];
 }
 
-/*function getSlotValues(filledSlots) {
-    const slotValues = {};
-
-    Object.keys(filledSlots).forEach((item) => {
-        const name  = filledSlots[item].name;
-
-        if (filledSlots[item] &&
-            filledSlots[item].resolutions &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0] &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-            switch (filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-                case 'ER_SUCCESS_MATCH':
-                    slotValues[name] = {
-                        heardAs: filledSlots[item].value,
-                        resolved: filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.name,
-                        ERstatus: 'ER_SUCCESS_MATCH'
-                    };
-                    break;
-                case 'ER_SUCCESS_NO_MATCH':
-                    slotValues[name] = {
-                        heardAs: filledSlots[item].value,
-                        resolved: '',
-                        ERstatus: 'ER_SUCCESS_NO_MATCH'
-                    };
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            slotValues[name] = {
-                heardAs: filledSlots[item].value || '', // may be null
-                resolved: '',
-                ERstatus: ''
-            };
-        }
-    }, this);
-
-    return slotValues;
-}
-*/
-
-/*
-function getSlotValues(filledSlots) {
-    const slotValues = {};
-
-    Object.keys(filledSlots).forEach((item) => {
-        const name  = filledSlots[item].name;
-
-        if (filledSlots[item] &&
-            filledSlots[item].resolutions &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0] &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-            switch (filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-                case 'ER_SUCCESS_MATCH':
-                    slotValues[name] = {
-                        heardAs: filledSlots[item].value,
-                        resolved: filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.name,
-                        ERstatus: 'ER_SUCCESS_MATCH'
-                    };
-                    break;
-                case 'ER_SUCCESS_NO_MATCH':
-                    slotValues[name] = {
-                        heardAs: filledSlots[item].value,
-                        resolved: '',
-                        ERstatus: 'ER_SUCCESS_NO_MATCH'
-                    };
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            slotValues[name] = {
-                heardAs: filledSlots[item].value || '', // may be null
-                resolved: '',
-                ERstatus: ''
-            };
-        }
-    }, this);
-
-    return slotValues;
-}
-*/
-
-// The SkillBuilder acts as the entry point for your skill, routing all request and response
-// payloads to the handlers above. Make sure any new handlers or interceptors you've
-// defined are included below. The order matters - they're processed top to bottom.
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
@@ -632,27 +529,9 @@ exports.handler = Alexa.SkillBuilders.custom()
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
-        //HelloWorldIntentHandler,
-        IntentReflectorHandler, // make sure IntentReflectorHandler is last so it doesn't override your custom intent handlers
+        IntentReflectorHandler,
     )
     .addErrorHandlers(
         ErrorHandler,
     )
     .lambda();
-
-
-/*
-const HelloWorldIntentHandler = {
-    canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'HelloWorldIntent';
-    },
-    handle(handlerInput) {
-        const speakOutput = 'Hello World!';
-        return handlerInput.responseBuilder
-            .speak(speakOutput)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
-            .getResponse();
-    }
-};
-*/
