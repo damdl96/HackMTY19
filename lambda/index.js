@@ -210,7 +210,8 @@ const LaunchRequestHandler = {
         var regard = randomElement([
             '¡Hola! Este es el juego que ganará el Hack Monterrey 2019. Empecemos.',
             'Estoy muy feliz de jugar contigo. ¡Iniciemos!',
-            'Estoy segura que te divertirás. Empecemos ahora.'
+            'Estoy segura que te divertirás. Empecemos ahora.',
+            '¡Estamos atrapados! ¡Hay que hacer algo!'
         ]);
 
         const speakOutput = regard + ' ¿Cómo te llamas?';
@@ -411,6 +412,10 @@ const AnswerIntentHandler = {
                 score = maze[""]
                 maze = undefined;
                 main = require('./templates/felicitaciones.json');
+                let speechOutput = `Tu puntaje es de: ${score}`;
+                let cardTitle = "¡Saliste del calabozo!"
+                let cardContent = `Tu puntaje es de: ${score}`;
+                this.emit(':askWithCard', speechOutput, cardTitle, cardContent);
             }
         }
 
