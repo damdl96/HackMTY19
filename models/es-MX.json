@@ -178,6 +178,20 @@
                 {
                     "name": "AMAZON.ScrollUpIntent",
                     "samples": []
+                },
+                {
+                    "name": "LevelIntent",
+                    "slots": [
+                        {
+                            "name": "difficulty",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "yo digo {difficulty}",
+                        "{difficulty}",
+                        "Mi numero es {difficulty}"
+                    ]
                 }
             ],
             "types": [
