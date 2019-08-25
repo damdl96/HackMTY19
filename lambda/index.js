@@ -3,6 +3,8 @@
 // session persistence, api calls, and more.
 const Alexa = require('ask-sdk-core');
 
+var person;
+
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
@@ -39,7 +41,7 @@ const WelcomeIntentHandler = {
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
 
-        var person = request.intent.slots.name.value;
+        person = request.intent.slots.name.value;
 
         const speakOutput = `Hola ${person}.`;
 
@@ -130,7 +132,22 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = 'Goodbye!';
+        var farewell;
+
+        if(person == ''){
+            farewell = randomElement([
+                `¡Nos vemos pronto! Te esperaré con ansias.`,
+                `¡Adiós!`,
+            ]);
+        } else {
+           farewell = randomElement([
+                `¡Nos vemos pronto ${person}! Te esperaré con ansias.`,
+                `¡Adiós ${person}!`,
+            ]);
+        }
+
+        const speakOutput = farewell;
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .getResponse();
@@ -143,6 +160,7 @@ const SessionEndedRequestHandler = {
     },
     handle(handlerInput) {
         // Any cleanup logic goes here.
+        person = '';
         return handlerInput.responseBuilder.getResponse();
     }
 };
