@@ -241,6 +241,7 @@ const WelcomeIntentHandler = {
 
         const speakOutput = `Hola ${person}, selecciona la dificultad de tu calabozo: ¿1, 2, 3 o 4?`;
 
+
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
@@ -392,7 +393,7 @@ const AnswerIntentHandler = {
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            .reprompt('intenta de nuevo', speakOutput)
+            .reprompt('Intenta de nuevo. ', speakOutput)
             .getResponse();
     },
 };
@@ -403,7 +404,7 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say hello to me! How can I help?';
+        const speakOutput = 'Indica qué dirección quieres seguir y ayúdame a salir del laberinto. Ten en cuenta que hay muchos niveles de dificultad. ¡Juntos podemos salir de aquí!';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -483,7 +484,7 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         console.log(`~~~~ Error handled: ${error.stack}`);
-        const speakOutput = `Sorry, I had trouble doing what you asked. Please try again.`;
+        const speakOutput = `¡Ups!, he tenido un problema haciendo lo que me pediste. Por favor intenta de nuevo.`;
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -497,49 +498,6 @@ function randomElement(regards){
 }
 
 /*function getSlotValues(filledSlots) {
-    const slotValues = {};
-
-    Object.keys(filledSlots).forEach((item) => {
-        const name  = filledSlots[item].name;
-
-        if (filledSlots[item] &&
-            filledSlots[item].resolutions &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0] &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status &&
-            filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-            switch (filledSlots[item].resolutions.resolutionsPerAuthority[0].status.code) {
-                case 'ER_SUCCESS_MATCH':
-                    slotValues[name] = {
-                        heardAs: filledSlots[item].value,
-                        resolved: filledSlots[item].resolutions.resolutionsPerAuthority[0].values[0].value.name,
-                        ERstatus: 'ER_SUCCESS_MATCH'
-                    };
-                    break;
-                case 'ER_SUCCESS_NO_MATCH':
-                    slotValues[name] = {
-                        heardAs: filledSlots[item].value,
-                        resolved: '',
-                        ERstatus: 'ER_SUCCESS_NO_MATCH'
-                    };
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            slotValues[name] = {
-                heardAs: filledSlots[item].value || '', // may be null
-                resolved: '',
-                ERstatus: ''
-            };
-        }
-    }, this);
-
-    return slotValues;
-}
-*/
-
-/*
-function getSlotValues(filledSlots) {
     const slotValues = {};
 
     Object.keys(filledSlots).forEach((item) => {
