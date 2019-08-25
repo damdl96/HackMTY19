@@ -11,15 +11,15 @@ Hoy en día, consumimos cientos de servicios que nos proporcionan una calidad de
 ¡Corre Alexa, corre! es una aplicación para todos los usuarios, sin importar su edad, lo único que se necesita para poder jugar es curiosidad, un dispositivo Echo, y decir "Alexa, Sacame de aqui" automaticamente se creara un ambiente de inmersión donde el usuario tendrá que imaginar a donde va y de donde viene por que, de no hacerlo !se perderá para siempre!
 
 #### Guión
-**U: ** Alexa, sacame de aqui
+**U:** Alexa, sacame de aqui
 
-**A: ** Bienvenido, ¿Quien eres?
+**A:** Bienvenido, ¿Comó te llamas?
 
-**U: **[Nombre de usuario]
+**U:** [Nombre de usuario]
 
-**A: **Hola [Nombre de usuario], selecciona la dificultad de tu calabozo: ¿Fácil, Medio, o Difícil?
+**A:** Hola [Nombre de usuario], selecciona la dificultad de tu calabozo: ¿Fácil, Medio, Difícil o Leyenda?
 
-**U: **[Selección de dificultad]
+**U:** [Selección de dificultad]
 
 **A: **Estamos atrapados, esta demasiado oscuro aquí dentro, puedo guiarte pero, debemos apresurarnos solo tenemos [tiempo] minutos para salir antes que tu antorcha se extinga. ¡Adelante!, nos podemos mover hacia: [Opciones]
 
