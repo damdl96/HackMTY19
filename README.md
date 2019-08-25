@@ -1,6 +1,8 @@
 # HackMTY19
 ### ¡Corre Alexa, corre!
-### amzn1.ask.skill.910e055c-974e-4c0e-830b-e8d67d1c8956
+### amzn1.ask.skill.910e055c-974e-4c0e-830b-e8d67d1c8956 (¡En proceso de aceptación! 🎉)
+
+![Screen Shot 2019-08-25 at 1 00 37 PM](https://user-images.githubusercontent.com/44983143/63653906-b036fb00-c738-11e9-8346-6b341902c306.png)
 
 #### Introducción
 !Entrena tu memoria de forma divertida! Con ¡Corre Alexa, corre!, entrena tus habilidades de retención de memoria a corto plazo escapando de este calabozo antes de que se termine el tiempo.
