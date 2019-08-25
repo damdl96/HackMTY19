@@ -16,7 +16,7 @@ const LaunchRequestHandler = {
 
         const speakOutput = regard + ' ¿Cómo te llamas?';
 
-        const main = require('./home.json');
+        const main = require('../templates/launch.json');
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
