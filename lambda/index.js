@@ -386,17 +386,17 @@ const AnswerIntentHandler = {
             speakOutput = speakOutput.concat(" podemos ir hacia el ");
             if (maze["location"][0] > 0){
                 if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" norte");
+                    speakOutput = speakOutput.concat(" norte,");
                 }
             }
             if(maze["location"][0] < (maze["Maze"].length - 1)) {
                 if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" sur");
+                    speakOutput = speakOutput.concat(" sur,");
                 }
             }
             if(maze["location"][1] < (maze["Maze"].length - 1)) {
                 if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
-                    speakOutput = speakOutput.concat(" este");
+                    speakOutput = speakOutput.concat(" este,");
                 }
             }
             if (maze["location"][1] > 0){
@@ -404,6 +404,7 @@ const AnswerIntentHandler = {
                     speakOutput = speakOutput.concat(" oeste");
                 }
             }
+
             speakOutput = speakOutput.concat(". ¿Cuál será nuestro siguiente paso?");
             
             if(maze["Maze"][maze["location"][0]][maze["location"][1]] === 3){

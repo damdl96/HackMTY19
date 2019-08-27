@@ -21,7 +21,7 @@ Hoy en día, consumimos cientos de servicios que nos proporcionan una calidad de
 
 **U:** [Selección de dificultad]
 
-**A: **Estamos atrapados, esta demasiado oscuro aquí dentro, puedo guiarte pero, debemos apresurarnos solo tenemos [tiempo] minutos para salir antes que tu antorcha se extinga. ¡Adelante!, nos podemos mover hacia: [Opciones]
+**A:** Estamos atrapados, esta demasiado oscuro aquí dentro, puedo guiarte pero, debemos apresurarnos solo tenemos [tiempo] minutos para salir antes que tu antorcha se extinga. ¡Adelante!, nos podemos mover hacia: [Opciones]
 
 #### Tecnologías
 <div align="center">
