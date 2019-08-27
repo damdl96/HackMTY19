@@ -49,7 +49,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 3,
     "location": [1,1],
     "count": 0
-},
+}, 
 {   "Maze":  [[1,0,0,1,1],
             [0,0,0,0,1],
             [1,1,0,0,2],
@@ -58,7 +58,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 6,
     "location": [3,4],
     "count": 0
-},
+}, 
 {   "Maze":  [[0,2,0,0,1],
             [0,0,1,0,1],
             [0,1,0,0,1],
@@ -67,7 +67,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 6,
     "location": [0,1],
     "count": 0
-},
+}, 
 {   "Maze":  [[1,1,0,0,1],
             [3,0,0,0,0],
             [0,0,0,1,0],
@@ -76,7 +76,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 6,
     "location": [4,3],
     "count": 0
-},
+}, 
 {   "Maze":  [[0,0,0,0,1],
             [1,1,3,0,0],
             [1,1,1,0,1],
@@ -95,7 +95,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 8,
     "location": [5,1],
     "count": 0
-},
+}, 
 {   "Maze":  [[2,1,0,0,1,1],
             [0,1,0,0,3,0],
             [0,1,0,0,0,1],
@@ -105,7 +105,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 9,
     "location": [0,0],
     "count": 0
-},
+}, 
 {   "Maze":  [[0,0,0,1,1,1],
             [0,1,1,1,0,9],
             [0,0,0,0,0,2],
@@ -115,7 +115,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 6,
     "location": [2,5],
     "count": 0
-},
+}, 
 {   "Maze":  [[0,1,0,1,0,0],
             [0,0,3,1,0,0],
             [0,0,1,1,1,0],
@@ -125,7 +125,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 7,
     "location": [5,3],
     "count": 0
-},
+}, 
 {   "Maze":  [[1,0,0,1,1,0],
             [2,0,1,1,0,0],
             [0,0,0,0,1,0],
@@ -149,7 +149,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 5,
     "location": [3,1],
     "count": 0
-},
+}, 
 {   "Maze":  [[0,0,0,0,1,1,1],
             [0,0,1,1,0,1,1],
             [0,0,2,0,0,0,1],
@@ -160,7 +160,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 5,
     "location": [2,2],
     "count": 0
-},
+}, 
 {   "Maze":  [[0,0,0,3,0,0,1],
             [0,0,0,1,1,0,1],
             [0,1,1,2,0,0,0],
@@ -171,7 +171,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 10,
     "location": [2,3],
     "count": 0
-},
+}, 
 {   "Maze":  [[1,0,1,1,1,0,0],
             [0,0,2,0,0,1,1],
             [0,0,0,0,0,1,1],
@@ -182,7 +182,7 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "steps": 5,
     "location": [1,2],
     "count": 0
-},
+}, 
 {   "Maze":  [[1,0,0,0,1,0,0],
             [1,0,0,0,1,1,1],
             [1,1,3,0,0,0,1],
@@ -206,10 +206,8 @@ const LaunchRequestHandler = {
     },
     handle(handlerInput) {
         var regard = randomElement([
-            '¡Hola! Este es el juego que ganará el Hack Monterrey 2019. Empecemos.',
             'Estoy muy feliz de jugar contigo. ¡Iniciemos!',
-            'Estoy segura que te divertirás. Empecemos ahora.',
-            '¡Estamos atrapados! ¡Hay que hacer algo!'
+            'Estoy segura que te divertirás. Empecemos ahora.'
         ]);
 
         const speakOutput = regard + ' ¿Cómo te llamas?';
@@ -240,7 +238,7 @@ const WelcomeIntentHandler = {
         var person = request.intent.slots.name.value;
 
         const speakOutput = `Hola ${person}, selecciona la dificultad de tu calabozo: ¿1, 2, 3 o 4?`;
-
+        
         const main = require('./templates/welcome.json');
 
         return handlerInput.responseBuilder
@@ -283,29 +281,29 @@ const LevelIntentHandler = {
                         break;
             default: difficulty = 0;
         }
-
+        
         if (difficulty > 4 || difficulty < 1){
             speakOutput = "Opción inválida. Intenta de nuevo con un número del 1 al 4";
         } else {
             maze = maps[difficulty - 1][Math.floor(Math.random() * 5)];
-            speakOutput = `Estamos atrapados, esta demasiado oscuro aquí dentro, puedo guiarte pero, debemos apresurarnos tenemos poco tiempo para salir antes que tu antorcha se extinga. ¡Adelante! nos podemos mover hacia`;
+            speakOutput = `Estamos atrapados, está demasiado oscuro aquí dentro, puedo guiarte, pero debemos apresurarnos tenemos poco tiempo para salir antes que tu antorcha se extinga. ¡Adelante! nos podemos mover hacia`;
             if (maze["location"][0] > 0){
-                if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] != 1){
+                if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
                     speakOutput = speakOutput.concat(" norte");
                 }
             }
             if(maze["location"][0] < (maze["Maze"].length - 1)) {
-                if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] != 1){
+                if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
                     speakOutput = speakOutput.concat(" sur");
                 }
             }
             if(maze["location"][1] < (maze["Maze"].length - 1)) {
-                if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] != 1){
+                if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
                     speakOutput = speakOutput.concat(" este");
                 }
             }
             if (maze["location"][1] > 0){
-                if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] != 1){
+                if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
                     speakOutput = speakOutput.concat(" oeste");
                 }
             }
@@ -334,20 +332,20 @@ const AnswerIntentHandler = {
     handle(handlerInput) {
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
-
+        
         var direction = request.intent.slots.answer.value;
         var main;
         var speakOutput;
-        if(maze == undefined){
-            speakOutput = "Elige una dificultad antes de decir alguna dirección."
-
+        if(maze === undefined){
+            speakOutput = "Por favor. Menciona una dificultad antes de decir alguna dirección."
+            
         } else {
             maze["count"] = maze["count"]+1;
             var flag = false;
             switch(direction){
-                case 'norte':
+                case 'norte':   
                     if (maze["location"][0] > 0){
-                        if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] != 1){
+                        if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
                             maze["location"][0] = maze["location"][0] - 1;
                             flag = true;
                         }
@@ -355,7 +353,7 @@ const AnswerIntentHandler = {
                     break;
                 case 'sur':
                     if(maze["location"][0] < (maze["Maze"].length - 1)) {
-                        if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] != 1){
+                        if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
                             maze["location"][0] = maze["location"][0] + 1;
                             flag = true;
                         }
@@ -363,7 +361,7 @@ const AnswerIntentHandler = {
                     break;
                 case 'este':
                     if(maze["location"][1] < (maze["Maze"].length - 1)) {
-                        if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] != 1){
+                        if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
                             maze["location"][1] = maze["location"][1] + 1;
                             flag = true;
                         }
@@ -371,7 +369,7 @@ const AnswerIntentHandler = {
                     break;
                 case 'oeste':
                     if (maze["location"][1] > 0){
-                        if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] != 1){
+                        if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
                             maze["location"][1] = maze["location"][1] - 1;
                             flag = true;
                         }
@@ -382,35 +380,42 @@ const AnswerIntentHandler = {
                 speakOutput = `Hemos avanzado en dirección ${direction},`;
                 main = require('./templates/walking.json');
             } else {
-                speakOutput = "Topamos contra una pared, hay que elegir otra opcion,";
+                speakOutput = "Topamos contra una pared, hay que elegir otra opción,";
                 main = require('./templates/wall.json');
             }
-            speakOutput = speakOutput.concat(" ¿Cuál será el siguiente paso?");
+            speakOutput = speakOutput.concat(" podemos ir hacia el ");
             if (maze["location"][0] > 0){
-                if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] != 1){
-                    speakOutput = speakOutput.concat(" norte");
+                if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
+                    speakOutput = speakOutput.concat(" norte,");
                 }
             }
             if(maze["location"][0] < (maze["Maze"].length - 1)) {
-                if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] != 1){
-                    speakOutput = speakOutput.concat(" sur");
+                if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
+                    speakOutput = speakOutput.concat(" sur,");
                 }
             }
             if(maze["location"][1] < (maze["Maze"].length - 1)) {
-                if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] != 1){
-                    speakOutput = speakOutput.concat(" este");
+                if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
+                    speakOutput = speakOutput.concat(" este,");
                 }
             }
             if (maze["location"][1] > 0){
-                if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] != 1){
+                if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
                     speakOutput = speakOutput.concat(" oeste");
                 }
             }
-            if(maze["Maze"][maze["location"][0]][maze["location"][1]] == 3){
+
+            speakOutput = speakOutput.concat(". ¿Cuál será nuestro siguiente paso?");
+            
+            if(maze["Maze"][maze["location"][0]][maze["location"][1]] === 3){
                 speakOutput = "Lo logramos! hemos salido del calabozo! Ahora di el nombre de la siguiente victima";
                 score = Math.floor((maze["steps"]/maze["count"])*100);
                 maze = undefined;
-                main = require('./templates/felicitaciones.json');
+                main = require('./templates/congratulations.json');
+                /*let speechOutput = `Tu puntaje es de: ${score}`;
+                let cardTitle = "¡Saliste del calabozo!"
+                let cardContent = `Tu puntaje es de: ${score}`;
+                this.emit(':askWithCard', speechOutput, cardTitle, cardContent);*/
             }
         }
 
@@ -437,7 +442,7 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say hello to me! How can I help?';
+        const speakOutput = '¡Estamos en un calabozo! ¡Hay que salir de aquí!';
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -455,10 +460,10 @@ const CancelAndStopIntentHandler = {
     },
     handle(handlerInput) {
         var farewell;
-
+        
         maze = undefined;
-
-        if(person == ''){
+        
+        if(person === ''){
             farewell = randomElement([
                 `¡Nos vemos pronto! Te esperaré con ansias.`,
                 `¡Adiós!`,
