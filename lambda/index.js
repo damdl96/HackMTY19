@@ -295,45 +295,51 @@ const LevelIntentHandler = {
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
 
-        var type = request.intent.slots.difficulty.value;
+        var difficulty = Number(request.intent.slots.difficulty.value);
         var speakOutput;
-        switch(type) {
-            case '1': difficulty = 1;
-                        break;
-            case '2': difficulty = 2;
-                        break;
-            case '3': difficulty = 3;
-                        break;
-            case '4': difficulty = 4;
-                        break;
-            default: difficulty = 0;
-        }
 
         if (difficulty > 4 || difficulty < 1){
             speakOutput = "Opción inválida. Intenta de nuevo con un número del 1 al 4";
         } else {
             maze = maps[difficulty - 1][Math.floor(Math.random() * 5)];
-            speakOutput = `Estamos atrapados, está demasiado oscuro aquí dentro, puedo guiarte, pero debemos apresurarnos tenemos poco tiempo para salir antes que tu antorcha se extinga. ¡Adelante! nos podemos mover hacia`;
+            speakOutput = `Estamos atrapados, está demasiado oscuro aquí dentro, puedo guiarte, pero debemos apresurarnos tenemos poco tiempo para salir antes que tu antorcha se extinga. ¡Adelante! nos podemos mover hacia el `;
+            availableDir = [];
             if (maze["location"][0] > 0){
                 if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" norte");
+                    availableDir.push("norte");
                 }
             }
             if(maze["location"][0] < (maze["Maze"].length - 1)) {
                 if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" sur");
+                    availableDir.push("sur");
                 }
             }
             if(maze["location"][1] < (maze["Maze"].length - 1)) {
                 if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
-                    speakOutput = speakOutput.concat(" este");
+                    if (availableDir.length > 1) {
+                        prev = availableDir.join(", ");
+                        availableDir = [prev,"este"];
+                    } else {
+                        availableDir.push("este");
+                    }
                 }
             }
             if (maze["location"][1] > 0){
                 if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
-                    speakOutput = speakOutput.concat(" oeste");
+                    if (availableDir.length > 1) {
+                        prev = availableDir.join(", ");
+                        availableDir = [prev,"oeste"];
+                    } else {
+                        availableDir.push("oeste");
+                    }
                 }
             }
+            if (availableDir[1] != "oeste"){
+                speakOutput = speakOutput.concat(availableDir.join(" ó "));
+            } else {
+                speakOutput = speakOutput.concat(availableDir.join(" u "));
+            }
+            speakOutput.concat(".");
         }
 
         const main = require('./templates/walking.json');
@@ -424,25 +430,41 @@ const AnswerIntentHandler = {
                 main = require('./templates/wall.json');
             }
             speakOutput = speakOutput.concat(" podemos ir hacia el ");
+            availableDir = [];
             if (maze["location"][0] > 0){
                 if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" norte,");
+                    availableDir.push("norte");
                 }
             }
             if(maze["location"][0] < (maze["Maze"].length - 1)) {
                 if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" sur,");
+                    availableDir.push("sur");
                 }
             }
             if(maze["location"][1] < (maze["Maze"].length - 1)) {
                 if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
-                    speakOutput = speakOutput.concat(" este,");
+                    if (availableDir.length > 1) {
+                        prev = availableDir.join(", ");
+                        availableDir = [prev,"este"];
+                    } else {
+                        availableDir.push("este");
+                    }
                 }
             }
             if (maze["location"][1] > 0){
                 if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
-                    speakOutput = speakOutput.concat(" oeste");
+                    if (availableDir.length > 1) {
+                        prev = availableDir.join(", ");
+                        availableDir = [prev,"oeste"];
+                    } else {
+                        availableDir.push("oeste");
+                    }
                 }
+            }
+            if (availableDir[1] != "oeste"){
+                speakOutput = speakOutput.concat(availableDir.join(" ó "));
+            } else {
+                speakOutput = speakOutput.concat(availableDir.join(" u "));
             }
 
             speakOutput = speakOutput.concat(". ¿Cuál será nuestro siguiente paso?");
