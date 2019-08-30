@@ -30,7 +30,7 @@
                     },
                     {
                         "type": "Text",
-                        "text": "hola ${payload.docdata.person} menciona la dificultad ",
+                        "text": "Hola ${payload.docdata.person}, menciona la dificultad.",
                         "left": "5%",
                         "top": "30%",
                         "right": "10%"
