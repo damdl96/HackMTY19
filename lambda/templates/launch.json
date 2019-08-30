@@ -33,7 +33,7 @@
                       "type": "Text",
                       "fontFamily": "Arial, Helvetica, sans-serif",
                       "fontSize": "35dp",
-                      "text": "¿Como te llamas?",
+                      "text": "¿Cómo te llamas?",
                       "alignSelf": "center",
                       "position": "absolute",
                       "top": "50%"

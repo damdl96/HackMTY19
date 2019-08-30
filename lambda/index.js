@@ -216,10 +216,8 @@ const LaunchRequestHandler = {
 
         const viewportProfile = Alexa.getViewportProfile(handlerInput.requestEnvelope);
 
-        if(supportsDisplay(handlerInput) && viewportProfile == "HUB-ROUND-SMALL" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-SMALL" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-MEDIUM" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-LARGE"){
+        if(viewportProfile == "HUB-ROUND-SMALL"  || viewportProfile == "HUB-LANDSCAPE-SMALL" ||
+            viewportProfile == "HUB-LANDSCAPE-MEDIUM" || viewportProfile == "HUB-LANDSCAPE-LARGE"){
 
           return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -259,10 +257,8 @@ const WelcomeIntentHandler = {
 
         const viewportProfile = Alexa.getViewportProfile(handlerInput.requestEnvelope);
 
-        if(supportsDisplay(handlerInput) && viewportProfile == "HUB-ROUND-SMALL" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-SMALL" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-MEDIUM" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-LARGE"){
+        if(viewportProfile == "HUB-ROUND-SMALL"  || viewportProfile == "HUB-LANDSCAPE-SMALL" ||
+            viewportProfile == "HUB-LANDSCAPE-MEDIUM" || viewportProfile == "HUB-LANDSCAPE-LARGE"){
 
           return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -344,10 +340,8 @@ const LevelIntentHandler = {
 
         const viewportProfile = Alexa.getViewportProfile(handlerInput.requestEnvelope);
 
-        if(supportsDisplay(handlerInput) && viewportProfile == "HUB-ROUND-SMALL" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-SMALL" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-MEDIUM" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-LARGE"){
+        if(viewportProfile == "HUB-ROUND-SMALL"  || viewportProfile == "HUB-LANDSCAPE-SMALL" ||
+            viewportProfile == "HUB-LANDSCAPE-MEDIUM" || viewportProfile == "HUB-LANDSCAPE-LARGE"){
 
           return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -467,10 +461,8 @@ const AnswerIntentHandler = {
 
         const viewportProfile = Alexa.getViewportProfile(handlerInput.requestEnvelope);
 
-        if(supportsDisplay(handlerInput) && viewportProfile == "HUB-ROUND-SMALL" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-SMALL" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-MEDIUM" ||
-          supportsDisplay(handlerInput) && viewportProfile == "HUB-LANDSCAPE-LARGE"){
+        if(viewportProfile == "HUB-ROUND-SMALL"  || viewportProfile == "HUB-LANDSCAPE-SMALL" ||
+            viewportProfile == "HUB-LANDSCAPE-MEDIUM" || viewportProfile == "HUB-LANDSCAPE-LARGE"){
 
           return handlerInput.responseBuilder
             .speak(speakOutput)
