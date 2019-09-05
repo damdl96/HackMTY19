@@ -195,7 +195,6 @@ const maps = [[{   "Maze":  [[0,1,0,1],
     "count": 0
 }]];
 
-var person;
 var maze = undefined;
 var difficulty;
 var score;
@@ -210,48 +209,7 @@ const LaunchRequestHandler = {
             'Estoy segura que te divertirás. Empecemos ahora.'
         ]);
 
-        const speakOutput = regard + ' ¿Cómo te llamas?';
-
-        const main = require('./templates/launch.json');
-
-        const viewportProfile = Alexa.getViewportProfile(handlerInput.requestEnvelope);
-
-        if(viewportProfile == "HUB-ROUND-SMALL"  || viewportProfile == "HUB-LANDSCAPE-SMALL" ||
-            viewportProfile == "HUB-LANDSCAPE-MEDIUM" || viewportProfile == "HUB-LANDSCAPE-LARGE"){
-
-          return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
-            .addDirective({
-               type : 'Alexa.Presentation.APL.RenderDocument',
-               version: '1.0',
-               document: main,
-            })
-            .getResponse();
-
-        } else {
-
-          return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
-            .getResponse();
-
-        }
-    }
-};
-
-const WelcomeIntentHandler = {
-    canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-            && handlerInput.requestEnvelope.request.intent.name === 'WelcomeIntent';
-    },
-    handle(handlerInput) {
-        const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
-        const request = handlerInput.requestEnvelope.request;
-
-        var person = request.intent.slots.name.value;
-
-        const speakOutput = `Hola ${person}, selecciona la dificultad de tu calabozo: ¿1, 2, 3 o 4?`;
+        const speakOutput = regard + ' menciona la dificultad de tu calabozo: ¿1, 2, 3 o 4?';
 
         const main = require('./templates/welcome.json');
 
@@ -267,11 +225,6 @@ const WelcomeIntentHandler = {
                type : 'Alexa.Presentation.APL.RenderDocument',
                version: '1.0',
                document: main,
-               datasources: {
-                  "docdata": {
-                     "person": person
-                 }
-                }
             })
             .getResponse();
 
@@ -295,46 +248,24 @@ const LevelIntentHandler = {
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
 
-        var type = request.intent.slots.difficulty.value;
+        var difficulty = Number(request.intent.slots.difficulty.value);
         var speakOutput;
-        switch(type) {
-            case '1': difficulty = 1;
-                        break;
-            case '2': difficulty = 2;
-                        break;
-            case '3': difficulty = 3;
-                        break;
-            case '4': difficulty = 4;
-                        break;
-            default: difficulty = 0;
-        }
-
-        if (difficulty > 4 || difficulty < 1){
+        
+        if (maze != undefined) {
+           if (Boolean(difficulty)) {
+                speakOutput = "¡Ya estamos en un calabozo! ¡Hay que salir de aquí! Las direcciones en las que nos podemos mover son: ";
+            } else {
+                speakOutput = "No se pudo reconocer lo que dijiste. Por favor menciona una dirección para movernos. Las direcciones posibles son: ";
+            }
+            speakOutput = speakOutput.concat(availableDirections());
+        } else if (difficulty > 4 || difficulty < 1){
             speakOutput = "Opción inválida. Intenta de nuevo con un número del 1 al 4";
         } else {
             maze = maps[difficulty - 1][Math.floor(Math.random() * 5)];
-            speakOutput = `Estamos atrapados, está demasiado oscuro aquí dentro, puedo guiarte, pero debemos apresurarnos tenemos poco tiempo para salir antes que tu antorcha se extinga. ¡Adelante! nos podemos mover hacia`;
-            if (maze["location"][0] > 0){
-                if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" norte");
-                }
-            }
-            if(maze["location"][0] < (maze["Maze"].length - 1)) {
-                if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" sur");
-                }
-            }
-            if(maze["location"][1] < (maze["Maze"].length - 1)) {
-                if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
-                    speakOutput = speakOutput.concat(" este");
-                }
-            }
-            if (maze["location"][1] > 0){
-                if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
-                    speakOutput = speakOutput.concat(" oeste");
-                }
-            }
+            speakOutput = `Estamos atrapados, está demasiado oscuro aquí dentro, puedo guiarte, pero debemos apresurarnos tenemos poco tiempo para salir antes que tu antorcha se extinga. ¡Adelante! nos podemos mover hacia el `;
+            speakOutput = speakOutput.concat(availableDirections());
         }
+        speakOutput = speakOutput.concat(".");
 
         const main = require('./templates/walking.json');
 
@@ -376,14 +307,39 @@ const AnswerIntentHandler = {
         var direction = request.intent.slots.answer.value;
         var main;
         var speakOutput;
-        if(maze === undefined){
-            speakOutput = "Por favor. Menciona una dificultad antes de decir alguna dirección."
+        
+        if (direction == 'parar' || direction == 'para' || direction == 'alto' || direction == 'detente' || direction == 'salir' || direction == 'sal' || direction == 'cancelar' || direction == 'cancela'){
+            var farewell;
 
+            maze = undefined;
+            dificultad = 0;
+            score = 0;
+
+            farewell = randomElement([
+                `¡Nos vemos pronto! Te esperaré con ansias.`,
+                `¡Adiós!`,
+            ]);
+        
+            const speakOutput = farewell;
+        
+            return handlerInput.responseBuilder
+                .speak(speakOutput)
+                .withShouldEndSession(true)
+                .getResponse();
+        }
+        
+        if(maze === undefined){
+            speakOutput = "Por favor. Menciona una dificultad antes de decir alguna dirección. Las dificultades posibles son: 1, 2, 3 o 4.";
+            main = require('./templates/walking.json');
         } else {
             maze["count"] = maze["count"]+1;
             var flag = false;
             switch(direction){
+                case 'adelante':
+                case 'enfrente':
                 case 'norte':
+                    speakOutput = `Hemos avanzado en dirección norte,`;
+                    main = require('./templates/walking.json');
                     if (maze["location"][0] > 0){
                         if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
                             maze["location"][0] = maze["location"][0] - 1;
@@ -391,7 +347,10 @@ const AnswerIntentHandler = {
                         }
                     }
                     break;
+                case 'atrás':
                 case 'sur':
+                    speakOutput = `Hemos avanzado en dirección sur,`;
+                main = require('./templates/walking.json');
                     if(maze["location"][0] < (maze["Maze"].length - 1)) {
                         if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
                             maze["location"][0] = maze["location"][0] + 1;
@@ -399,7 +358,10 @@ const AnswerIntentHandler = {
                         }
                     }
                     break;
+                case 'derecha':
                 case 'este':
+                    speakOutput = `Hemos avanzado en dirección este,`;
+                main = require('./templates/walking.json');
                     if(maze["location"][1] < (maze["Maze"].length - 1)) {
                         if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
                             maze["location"][1] = maze["location"][1] + 1;
@@ -407,7 +369,10 @@ const AnswerIntentHandler = {
                         }
                     }
                     break;
+                case 'izquierda':
                 case 'oeste':
+                    speakOutput = `Hemos avanzado en dirección oeste,`;
+                    main = require('./templates/walking.json');
                     if (maze["location"][1] > 0){
                         if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
                             maze["location"][1] = maze["location"][1] - 1;
@@ -416,41 +381,20 @@ const AnswerIntentHandler = {
                     }
                     break;
             }
-            if(flag){
-                speakOutput = `Hemos avanzado en dirección ${direction},`;
-                main = require('./templates/walking.json');
-            } else {
-                speakOutput = "Topamos contra una pared, hay que elegir otra opción,";
+            if(!flag){
+                speakOutput = "Topamos contra una pared, ";
                 main = require('./templates/wall.json');
             }
             speakOutput = speakOutput.concat(" podemos ir hacia el ");
-            if (maze["location"][0] > 0){
-                if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" norte,");
-                }
-            }
-            if(maze["location"][0] < (maze["Maze"].length - 1)) {
-                if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
-                    speakOutput = speakOutput.concat(" sur,");
-                }
-            }
-            if(maze["location"][1] < (maze["Maze"].length - 1)) {
-                if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
-                    speakOutput = speakOutput.concat(" este,");
-                }
-            }
-            if (maze["location"][1] > 0){
-                if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
-                    speakOutput = speakOutput.concat(" oeste");
-                }
-            }
+            speakOutput = speakOutput.concat(String(availableDirections()));
 
-            speakOutput = speakOutput.concat(". ¿Cuál será nuestro siguiente paso?");
+//            speakOutput = speakOutput.concat(". ¿Cuál será nuestro siguiente paso?");
 
-            if(maze["Maze"][maze["location"][0]][maze["location"][1]] === 3){
-                speakOutput = "¡Lo logramos, hemos salido del calabozo! Ahora di el nombre de la siguiente víctima.";
+            if(maze["Maze"][maze["location"][0]][maze["location"][1]] === 3) {
+                speakOutput = "¡Lo logramos, hemos salido del calabozo! Menciona una dificultad para el siguiente calabozo: 1, 2, 3 o 4.";
                 score = Math.floor((maze["steps"]/maze["count"])*100);
                 maze = undefined;
+                dificultad = 0;
                 main = require('./templates/congratulations.json');
                 /*let speechOutput = `Tu puntaje es de: ${score}`;
                 let cardTitle = "¡Saliste del calabozo!"
@@ -496,7 +440,15 @@ const HelpIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = '¡Estamos en un calabozo! ¡Hay que salir de aquí!';
+        var speakOutput = '¡Estamos en un calabozo! ¡Hay que salir de aquí!';
+        
+        if (maze == undefined) {
+            speakOutput = speakOutput.concat(" Menciona una dificultad para el calabozo. Las dificultades disponibles son: 1, 2, 3 o 4.");
+        } else {
+            speakOutput = speakOutput.concat(" Menciona una dirección para continuar. Las direcciones posibles son: ");
+            speakOutput = speakOutput.concat(availableDirections());
+            speakOutput = speakOutput.concat(".");
+        }
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -513,26 +465,22 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        var farewell;
+       var farewell;
 
         maze = undefined;
+        dificultad = 0;
+        score = 0;
 
-        if(person === ''){
-            farewell = randomElement([
-                `¡Nos vemos pronto! Te esperaré con ansias.`,
-                `¡Adiós!`,
-            ]);
-        } else {
-           farewell = randomElement([
-                `¡Nos vemos pronto ${person}! Te esperaré con ansias.`,
-                `¡Adiós ${person}!`,
-            ]);
-        }
-
+        farewell = randomElement([
+            `¡Nos vemos pronto! Te esperaré con ansias.`,
+            `¡Adiós!`,
+        ]);
+        
         const speakOutput = farewell;
-
+        
         return handlerInput.responseBuilder
             .speak(speakOutput)
+            .withShouldEndSession(true)
             .getResponse();
     }
 };
@@ -542,12 +490,27 @@ const SessionEndedRequestHandler = {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
     },
     handle(handlerInput) {
-        person = '';
-        return handlerInput.responseBuilder.getResponse();
+        var farewell;
+
+        maze = undefined;
+        dificultad = 0;
+        score = 0;
+
+        farewell = randomElement([
+            `¡Nos vemos pronto! Te esperaré con ansias.`,
+            `¡Adiós!`,
+        ]);
+        
+        const speakOutput = farewell;
+        
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withShouldEndSession(true)
+            .getResponse();
     }
 };
 
-const IntentReflectorHandler = {
+/*const IntentReflectorHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest';
     },
@@ -559,14 +522,22 @@ const IntentReflectorHandler = {
             .speak(speakOutput)
             .getResponse();
     }
-};
+};*/
 
 const ErrorHandler = {
     canHandle() {
         return true;
     },
     handle(handlerInput, error) {
-        const speakOutput = `Lo siento, ocurrió un error. ${error.stack}`;
+        var speakOutput = `Lo siento, ocurrió un error. Por favor, `;
+        
+        if (maze == undefined) {
+            speakOutput = speakOutput.concat("menciona una dificultad para el calabozo. Las dificultades disponibles son: 1, 2, 3 o 4.");
+        } else {
+            speakOutput = speakOutput.concat("menciona una dirección para continuar. Las direcciones posibles son: ");
+            speakOutput = speakOutput.concat(availableDirections());
+            speakOutput = speakOutput.concat(".");
+        }
 
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -579,16 +550,56 @@ function randomElement(regards){
     return regards[Math.floor(Math.random()*regards.length)];
 }
 
+function availableDirections() {
+     var availableDir = [];
+     var directions;
+    if (maze["location"][0] > 0){
+        if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
+            availableDir.push("norte");
+        }
+    }
+    if(maze["location"][0] < (maze["Maze"].length - 1)) {
+        if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
+            availableDir.push("sur");
+        }
+    }
+    if(maze["location"][1] < (maze["Maze"].length - 1)) {
+        if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
+            if (availableDir.length > 1) {
+                prev = availableDir.join(", ");
+                availableDir = [prev,"este"];
+            } else {
+                availableDir.push("este");
+            }
+        }
+    }
+    if (maze["location"][1] > 0){
+        if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
+            if (availableDir.length > 1) {
+                prev = availableDir.join(", ");
+                availableDir = [prev,"oeste"];
+            } else {
+                availableDir.push("oeste");
+            }
+        }
+    }
+    if (availableDir[1] != "oeste"){
+        directions = availableDir.join(" ó ");
+    } else {
+        directions = availableDir.join(" u ");
+    }
+    return directions;
+}
+
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-        WelcomeIntentHandler,
         LevelIntentHandler,
         AnswerIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         SessionEndedRequestHandler,
-        IntentReflectorHandler,
+        //IntentReflectorHandler,
     )
     .addErrorHandlers(
         ErrorHandler,
