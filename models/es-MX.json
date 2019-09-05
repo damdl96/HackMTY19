@@ -5,14 +5,7 @@
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
-                    "samples": [
-                        "detente",
-                        "alto",
-                        "parar",
-                        "cancelar",
-                        "cancela",
-                        "para"
-                    ]
+                    "samples": []
                 },
                 {
                     "name": "AMAZON.HelpIntent",
@@ -38,6 +31,7 @@
                 {
                     "name": "AMAZON.StopIntent",
                     "samples": [
+                        "salir del juego",
                         "jugaremos pronto",
                         "jugaremos después",
                         "jugaremos luego",
@@ -53,25 +47,7 @@
                         "hasta la próxima",
                         "nos vemos pronto",
                         "hasta pronto",
-                        "nos vemos",
-                        "queremos salir",
-                        "quiero salir",
-                        "sal",
-                        "salir del juego"
-                    ]
-                },
-                {
-                    "name": "WelcomeIntent",
-                    "slots": [
-                        {
-                            "name": "name",
-                            "type": "AMAZON.FirstName"
-                        }
-                    ],
-                    "samples": [
-                        "{name}",
-                        "me llamo {name}",
-                        "mi nombre es {name}"
+                        "nos vemos"
                     ]
                 },
                 {
@@ -83,10 +59,12 @@
                     "slots": [
                         {
                             "name": "answer",
-                            "type": "DirectionSlot"
+                            "type": "ActionSlot"
                         }
                     ],
                     "samples": [
+                        "queremos {answer}",
+                        "quiero {answer}",
                         "ustedes dicen {answer}",
                         "ellos dicen {answer}",
                         "ellas dicen {answer}",
@@ -196,8 +174,34 @@
             ],
             "types": [
                 {
-                    "name": "DirectionSlot",
+                    "name": "ActionSlot",
                     "values": [
+                        {
+                            "name": {
+                                "value": "cancelar",
+                                "synonyms": [
+                                    "cancela"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "salir",
+                                "synonyms": [
+                                    "sal"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "parar",
+                                "synonyms": [
+                                    "para",
+                                    "detente",
+                                    "alto"
+                                ]
+                            }
+                        },
                         {
                             "name": {
                                 "value": "oeste",

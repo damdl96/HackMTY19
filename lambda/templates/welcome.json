@@ -11,9 +11,6 @@
     "commands": {},
     "layouts": {},
     "mainTemplate": {
-        "parameters": [
-            "payload"
-        ],
         "items": [
             {
                 "type": "Container",
@@ -30,15 +27,15 @@
                     },
                     {
                         "type": "Text",
-                        "text": "Hola ${payload.docdata.person}, menciona la dificultad.",
-                        "left": "5%",
+                        "text": "Hola, menciona la dificultad.",
+                        "left": "25%",
                         "top": "30%",
                         "right": "10%"
                     },
                     {
                         "type": "Text",
                         "text": "1 2 3 4",
-                        "left": "35%",
+                        "left": "45%",
                         "top": "50%",
                         "right": "50%"
                     }
