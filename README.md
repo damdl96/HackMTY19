@@ -1,9 +1,11 @@
 # HackMTY19
 ### ¡Sácame de aquí!
-### amzn1.ask.skill.910e055c-974e-4c0e-830b-e8d67d1c8956 (¡En proceso de aceptación! 🎉)
+### amzn1.ask.skill.910e055c-974e-4c0e-830b-e8d67d1c8956 
+
+### [¡Sácame de aquí!](https://www.amazon.com.mx/dp/B07XH5Q4F1/ref=sr_1_1?fst=as%3Aoff&qid=1567721303&refinements=p_n_date%3A17592255011&rnid=17592253011&s=digital-skills&sr=1-1) Ya disponible en alexa skill store! 🎉
 
 #### Introducción
-!Entrena tu memoria de forma divertida! Con ¡Corre Alexa, corre!, entrena tus habilidades de retención de memoria a corto plazo escapando de este calabozo antes de que se termine el tiempo.
+!Entrena tu memoria de forma divertida! Con ¡Sácame de aquí!, entrena tus habilidades de retención de memoria a corto plazo escapando de este calabozo antes de que se termine el tiempo.
 
 #### Descripción
 Hoy en día, consumimos cientos de servicios que nos proporcionan una calidad de vida mayor a la que jamás se habría imaginado que el hombre llegaría, sin embargo, esto ha traído un problema: el desarrollo de las habilidades de la memoria, así como las habilidades críticas y la imaginación. Estas han decaído significativamente, haciendo que las personas sean más ociosas y pierdan la curiosidad por saber más. Con ¡Sácame de aquí!, podrás desarrollar tu pensamiento crítico y de posicionamiento espacial. Pero recuerda, debes hacerlo antes de que tu antorcha se extinga, de no ser así, ¡quedarás atrapado para siempre en el calabozo!
@@ -44,5 +46,5 @@ Hoy en día, consumimos cientos de servicios que nos proporcionan una calidad de
 
 <div align="center">
 <img src="https://i.imgur.com/SbAoUzo.png"
-width=90 height=90/>
+width=100 height=100/>
 </div>
