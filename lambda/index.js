@@ -1,203 +1,19 @@
 const Alexa = require('ask-sdk-core');
 
-//TODO: separar maps para limpiar codigo
-const maps = [[{   "Maze":  [[0,1,0,1],
-            [1,0,0,2],
-            [3,0,1,0],
-            [0,1,1,1]],
-    "steps": 4,
-    "location": [1,3],
-    "count": 0
-},
-{   "Maze":  [[0,0,1,0],
-            [3,0,0,0],
-            [0,1,0,0],
-            [1,0,2,0]],
-    "steps": 4,
-    "location": [3,2],
-    "count": 0
-},
-{   "Maze":  [[0,1,0,3],
-            [0,0,0,0],
-            [2,0,0,1],
-            [1,0,0,1]],
-    "steps": 5,
-    "location": [2,0],
-    "count": 0
-},
-{   "Maze":  [[3,0,0,0],
-            [0,0,1,1],
-            [0,0,1,0],
-            [0,0,0,2]],
-    "steps": 6,
-    "location": [3,3],
-    "count": 0
-},
-{   "Maze":  [[1,1,0,0],
-            [0,0,0,3],
-            [0,2,0,1],
-            [0,1,0,0]],
-    "steps": 3,
-    "location": [2,1],
-    "count": 0
-}],
-[{   "Maze":  [[1,1,0,0,0],
-            [1,2,0,1,1],
-            [1,0,0,1,0],
-            [0,0,3,0,0],
-            [1,0,0,0,0]],
-    "steps": 3,
-    "location": [1,1],
-    "count": 0
-},
-{   "Maze":  [[1,0,0,1,1],
-            [0,0,0,0,1],
-            [1,1,0,0,2],
-            [0,1,0,1,1],
-            [1,0,0,0,3]],
-    "steps": 6,
-    "location": [3,4],
-    "count": 0
-},
-{   "Maze":  [[0,2,0,0,1],
-            [0,0,1,0,1],
-            [0,1,0,0,1],
-            [1,1,1,0,0],
-            [1,1,1,3,1]],
-    "steps": 6,
-    "location": [0,1],
-    "count": 0
-},
-{   "Maze":  [[1,1,0,0,1],
-            [3,0,0,0,0],
-            [0,0,0,1,0],
-            [1,0,1,1,1],
-            [1,0,0,2,0]],
-    "steps": 6,
-    "location": [4,3],
-    "count": 0
-},
-{   "Maze":  [[0,0,0,0,1],
-            [1,1,3,0,0],
-            [1,1,1,0,1],
-            [1,1,2,0,1],
-            [0,0,0,0,0]],
-    "steps": 4,
-    "location": [3,2],
-    "count": 0
-}],
-[{   "Maze":  [[0,0,3,0,1,0],
-            [0,1,1,0,0,0],
-            [0,0,1,1,0,0],
-            [0,0,0,1,0,1],
-            [1,0,0,0,0,0],
-            [0,2,1,1,0,0]],
-    "steps": 8,
-    "location": [5,1],
-    "count": 0
-},
-{   "Maze":  [[2,1,0,0,1,1],
-            [0,1,0,0,3,0],
-            [0,1,0,0,0,1],
-            [0,0,0,0,0,0],
-            [1,0,0,1,1,0],
-            [1,0,1,0,0,1]],
-    "steps": 9,
-    "location": [0,0],
-    "count": 0
-},
-{   "Maze":  [[0,0,0,1,1,1],
-            [0,1,1,1,0,9],
-            [0,0,0,0,0,2],
-            [3,0,0,0,0,1],
-            [1,0,0,0,0,1],
-            [0,0,0,1,1,0]],
-    "steps": 6,
-    "location": [2,5],
-    "count": 0
-},
-{   "Maze":  [[0,1,0,1,0,0],
-            [0,0,3,1,0,0],
-            [0,0,1,1,1,0],
-            [1,0,0,0,0,0],
-            [1,0,1,0,0,0],
-            [0,0,1,2,0,0]],
-    "steps": 7,
-    "location": [5,3],
-    "count": 0
-},
-{   "Maze":  [[1,0,0,1,1,0],
-            [2,0,1,1,0,0],
-            [0,0,0,0,1,0],
-            [0,0,0,0,0,0],
-            [1,1,0,1,3,0],
-            [0,0,0,0,0,0]],
-    "steps": 7,
-    "location": [1,0],
-    "count": 0
-}],
-
-
-
-[{   "Maze":  [[0,0,0,0,0,0,1],
-            [0,0,0,0,1,0,1],
-            [1,0,1,1,0,0,1],
-            [0,2,0,0,0,0,0],
-            [0,0,1,0,0,0,0],
-            [0,1,0,0,0,0,0],
-            [0,1,1,3,0,0,1]],
-    "steps": 5,
-    "location": [3,1],
-    "count": 0
-},
-{   "Maze":  [[0,0,0,0,1,1,1],
-            [0,0,1,1,0,1,1],
-            [0,0,2,0,0,0,1],
-            [0,0,1,0,0,1,0],
-            [1,0,0,0,0,0,0],
-            [3,0,0,0,0,1,0],
-            [0,0,0,1,0,0,0]],
-    "steps": 5,
-    "location": [2,2],
-    "count": 0
-},
-{   "Maze":  [[0,0,0,3,0,0,1],
-            [0,0,0,1,1,0,1],
-            [0,1,1,2,0,0,0],
-            [0,0,0,0,0,0,0],
-            [1,0,0,1,0,1,0],
-            [0,1,0,0,1,0,0],
-            [0,0,0,1,0,1,1]],
-    "steps": 10,
-    "location": [2,3],
-    "count": 0
-},
-{   "Maze":  [[1,0,1,1,1,0,0],
-            [0,0,2,0,0,1,1],
-            [0,0,0,0,0,1,1],
-            [0,0,0,0,1,0,0],
-            [1,0,0,0,0,0,1],
-            [0,0,0,3,1,0,0],
-            [1,1,0,0,0,0,0]],
-    "steps": 5,
-    "location": [1,2],
-    "count": 0
-},
-{   "Maze":  [[1,0,0,0,1,0,0],
-            [1,0,0,0,1,1,1],
-            [1,1,3,0,0,0,1],
-            [0,0,0,0,1,0,1],
-            [0,1,1,0,0,0,0],
-            [1,0,0,0,0,1,1],
-            [1,1,2,0,0,0,1]],
-    "steps": 6,
-    "location": [6,2],
-    "count": 0
-}]];
-
+//maze variables
 var maze = undefined;
-var difficulty;
-var score;
+var difficulty = undefined;
+var steps_taken = 0;
+
+//States
+const inicio = 0;
+const libre = 1;
+const puente = 2;
+const acantilado = 3;
+const pinturas = 4;
+const casada_der = 5;
+const cascada_izq = 6;
+const salida = 8;
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -209,7 +25,7 @@ const LaunchRequestHandler = {
             'Estoy segura que te divertirás. Empecemos ahora.'
         ]);
 
-        const speakOutput = regard + ' menciona la dificultad de tu calabozo: ¿1, 2, 3 o 4?';
+        const speakOutput = regard + ' menciona la dificultad de tu calabozo; <break time="0.5s"/> 1 para fácil <break time="0.5s"/> 2 para media <break time="0.5s"/> 3 para difícil <break time="0.5s"/> 4 para leyenda';
 
         const main = require('./templates/welcome.json');
 
@@ -247,9 +63,10 @@ const LevelIntentHandler = {
     handle(handlerInput) {
         const requestAttributes = handlerInput.attributesManager.getRequestAttributes();
         const request = handlerInput.requestEnvelope.request;
-
+        
+        var speakOutput = "";
+        
         var difficulty = Number(request.intent.slots.difficulty.value);
-        var speakOutput;
         
         if (maze != undefined) {
            if (Boolean(difficulty)) {
@@ -257,17 +74,19 @@ const LevelIntentHandler = {
             } else {
                 speakOutput = "No se pudo reconocer lo que dijiste. Por favor menciona una dirección para movernos. Las direcciones posibles son: ";
             }
-            speakOutput = speakOutput.concat(availableDirections());
+            //speakOutput = speakOutput.concat(availableDirections());
         } else if (difficulty > 4 || difficulty < 1){
             speakOutput = "Opción inválida. Intenta de nuevo con un número del 1 al 4";
         } else {
-            maze = maps[difficulty - 1][Math.floor(Math.random() * 5)];
+            
+            //maze = jsGenerateMaze(2 + (2 * difficulty));
             speakOutput = `Estamos atrapados, está demasiado oscuro aquí dentro, puedo guiarte, pero debemos apresurarnos tenemos poco tiempo para salir antes que tu antorcha se extinga. ¡Adelante! nos podemos mover hacia el `;
-            speakOutput = speakOutput.concat(availableDirections());
+            //speakOutput = speakOutput.concat(availableDirections());
         }
+        
         speakOutput = speakOutput.concat(".");
 
-        const main = require('./templates/walking.json');
+        /*const main = require('./templates/walking.json');
 
         const viewportProfile = Alexa.getViewportProfile(handlerInput.requestEnvelope);
 
@@ -284,14 +103,14 @@ const LevelIntentHandler = {
             })
             .getResponse();
 
-        } else {
+        } else {*/
 
           return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
             .getResponse();
 
-        }
+        //}
     }
 };
 
@@ -550,45 +369,84 @@ function randomElement(regards){
     return regards[Math.floor(Math.random()*regards.length)];
 }
 
-function availableDirections() {
-     var availableDir = [];
-     var directions;
-    if (maze["location"][0] > 0){
-        if (maze["Maze"][(maze["location"][0] - 1)][maze["location"][1]] !== 1){
-            availableDir.push("norte");
-        }
-    }
-    if(maze["location"][0] < (maze["Maze"].length - 1)) {
-        if (maze["Maze"][(maze["location"][0] + 1)][maze["location"][1]] !== 1){
-            availableDir.push("sur");
-        }
-    }
-    if(maze["location"][1] < (maze["Maze"].length - 1)) {
-        if (maze["Maze"][maze["location"][0]][(maze["location"][1] + 1)] !== 1){
-            if (availableDir.length > 1) {
-                prev = availableDir.join(", ");
-                availableDir = [prev,"este"];
-            } else {
-                availableDir.push("este");
+//Function to generate the maze
+function jsGenerateMaze(steps) {
+    dungeon = {};
+    dungeon[0] = { "tipo": inicio,     "norte": 4,     "este": 4,      "oeste" : 4 };
+    dungeon[1] = { "tipo": puente,     "norte": 0,     "este": null,   "oeste" : null };
+    dungeon[2] = { "tipo": pinturas,   "norte": 1,     "este": 3,      "oeste" : 0 };
+    dungeon[3] = { "tipo": acantilado, "norte": null,  "este": 1,      "oeste": 0 };
+    for (var i = 0; i < steps; i++) {
+        dungeon[i + 4] = {};
+        if (i != steps - 1) {
+            switch(Math.floor(Math.random() * 4) + 1){
+               case libre: 
+                        dungeon[i + 4]["tipo"] = libre;
+                        switch(Math.floor(Math.random() * 3)){
+                            case 0:
+                                dungeon[i + 4]["norte"] = i + 5;
+                                dungeon[i + 4]["este"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["oeste"] = Math.floor(Math.random() * 3 + 1);
+                                break;
+                            case 1:
+                                dungeon[i + 4]["norte"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["este"] = i + 5;
+                                dungeon[i + 4]["oeste"] = Math.floor(Math.random() * 3 + 1);
+                                break;
+                            case 2:
+                                dungeon[i + 4]["norte"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["este"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["oeste"] = i + 5;
+                        }
+                        break;
+                case puente: 
+                        dungeon[i + 4]["tipo"] = puente;
+                        dungeon[i + 4]["norte"] = i + 5;
+                        dungeon[i + 4]["este"] = null;
+                        dungeon[i + 4]["oeste"] = null;
+                        break;
+                case acantilado:  
+                        dungeon[i + 4]["tipo"] = acantilado;
+                        dungeon[i + 4]["norte"] = null;
+                        switch(Math.floor(Math.random() * 2)){
+                            case 0:
+                                dungeon[i + 4]["este"] = i + 5;
+                                dungeon[i + 4]["oeste"] = Math.floor(Math.random() * 3 + 1);
+                                break;
+                            case 1:
+                                dungeon[i + 4]["este"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["oeste"] = i + 5;
+                        }
+                        break;
+                case pinturas: 
+                        dungeon[i + 4]["tipo"] = pinturas;
+                        switch(Math.floor(Math.random() * 3)){
+                            case 0:
+                                dungeon[i + 4]["norte"] = i + 5;
+                                dungeon[i + 4]["este"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["oeste"] = Math.floor(Math.random() * 3 + 1);
+                                break;
+                            case 1:
+                                dungeon[i + 4]["norte"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["este"] = i + 5;
+                                dungeon[i + 4]["oeste"] = Math.floor(Math.random() * 3 + 1);
+                                break;
+                            case 2:
+                                dungeon[i + 4]["norte"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["este"] = Math.floor(Math.random() * 3) + 1;
+                                dungeon[i + 4]["oeste"] = i + 5;
+                        }
+                        break;
+                default: console.log("error");
             }
+        } else {
+            dungeon[i+4]["tipo"] = salida;
+            dungeon[i + 4]["norte"] = null;
+            dungeon[i + 4]["este"] = null;
+            dungeon[i + 4]["oeste"] = null;
         }
     }
-    if (maze["location"][1] > 0){
-        if (maze["Maze"][maze["location"][0]][(maze["location"][1] - 1)] !== 1){
-            if (availableDir.length > 1) {
-                prev = availableDir.join(", ");
-                availableDir = [prev,"oeste"];
-            } else {
-                availableDir.push("oeste");
-            }
-        }
-    }
-    if (availableDir[1] != "oeste"){
-        directions = availableDir.join(" ó ");
-    } else {
-        directions = availableDir.join(" u ");
-    }
-    return directions;
+    return dungeon;
 }
 
 exports.handler = Alexa.SkillBuilders.custom()
